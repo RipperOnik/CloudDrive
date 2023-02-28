@@ -40,7 +40,10 @@ export default function Folder({ folder }) {
     function handleRename(e) {
         e.preventDefault()
         closeModal()
-        database.folders.update(folder.id, { name: inputRef.current.value }, currentUser)
+        if (folder.name !== inputRef.current.value) {
+            database.folders.update(folder.id, { name: inputRef.current.value }, currentUser)
+        }
+
     }
     return (
         <>

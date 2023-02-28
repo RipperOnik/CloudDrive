@@ -37,7 +37,9 @@ export default function File({ file }) {
     function handleRename(e) {
         e.preventDefault()
         closeModal()
-        database.files.update(file.id, { name: inputRef.current.value })
+        if (file.name !== inputRef.current.value) {
+            database.files.update(file.id, { name: inputRef.current.value })
+        }
     }
 
     return (
