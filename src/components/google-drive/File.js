@@ -16,9 +16,13 @@ export default function File({ file }) {
         e.preventDefault()
         setShow(true)
     }
+    function closePopover() {
+        setShow(false)
+    }
     function handleRemove() {
         database.files.remove(file.id)
         storageManager.delete(file.fileStoragePath)
+        closePopover()
     }
 
     return (
@@ -27,7 +31,7 @@ export default function File({ file }) {
                 <FontAwesomeIcon icon={faFile} style={{ marginRight: "8px" }} />
                 {file.name}
             </a>
-            <Overlay target={target.current} show={show} placement="right" rootClose onHide={() => setShow(false)}>
+            <Overlay target={target.current} show={show} placement="right" rootClose onHide={closePopover}>
                 <Popover className="popover-shadow">
                     <ButtonGroup vertical>
                         <ActionButton icon={faTrashCan} onClick={handleRemove}>

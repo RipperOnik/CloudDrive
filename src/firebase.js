@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, deleteDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, deleteDoc, query, where, getDocs, onSnapshot } from "firebase/firestore";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 
 const firebaseConfig = {
@@ -28,13 +28,37 @@ export const database = {
             const docRef = doc(collection(firestore, "folders"), folderId)
             return getDoc(docRef)
         },
-        remove: async (folderId, childFiles, childFolders) => {
+        remove: async (folderId, currentUser) => {
+
             const folderRef = doc(collection(firestore, "folders"), folderId)
             try {
                 await deleteDoc(folderRef)
             } catch (e) {
                 console.error("Error deleting folder: ", e);
             }
+
+            // delete all the child files
+            const childFilesQuery = query(collection(firestore, "files"), where("folderId", "==", folderId), where("userId", "==", currentUser.uid))
+            const childFiles = await getDocs(childFilesQuery)
+            childFiles.forEach(doc => {
+                try {
+                    deleteDoc(doc.ref)
+                    const filePath = doc.data().fileStoragePath
+                    // delete the file from storage
+                    storageManager.delete(filePath)
+                } catch (e) {
+                    console.error('Error deleting a child file', e)
+                }
+            })
+            // get all the child folders
+            const childFoldersQuery = query(collection(firestore, "folders"), where("parentId", "==", folderId), where("userId", "==", currentUser.uid))
+            const childFolders = await getDocs(childFoldersQuery)
+
+            childFolders.forEach(doc => {
+                // recursive call to delete child files and folders 
+                database.folders.remove(doc.id, currentUser)
+            })
+
         },
         collection: collection(firestore, "folders")
 
