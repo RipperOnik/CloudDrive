@@ -26,8 +26,8 @@ export default function AddFileButton({ currentFolder }) {
             currentFolder === ROOT_FOLDER
                 ? `${parentPath}/${file.name}`
                 : `${parentPath}/${currentFolder.name}/${file.name}`
-
-        const storageRef = ref(storage, `/files/${currentUser.uid}/${filePath}`)
+        const fullPath = `/files/${currentUser.uid}/${filePath}`
+        const storageRef = ref(storage, fullPath)
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on('state_changed',
@@ -71,13 +71,11 @@ export default function AddFileButton({ currentFolder }) {
                                 name: file.name,
                                 createdAt: database.getCurrentTimestamp(),
                                 folderId: currentFolder.id,
-                                userId: currentUser.uid
+                                userId: currentUser.uid,
+                                fileStoragePath: fullPath
                             })
                         }
                     })
-
-
-
                 });
             }
         );

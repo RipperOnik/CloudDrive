@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, deleteDoc } from "firebase/firestore";
+import { deleteObject, getStorage, ref } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -28,6 +28,14 @@ export const database = {
             const docRef = doc(collection(firestore, "folders"), folderId)
             return getDoc(docRef)
         },
+        remove: async (folderId, childFiles, childFolders) => {
+            const folderRef = doc(collection(firestore, "folders"), folderId)
+            try {
+                await deleteDoc(folderRef)
+            } catch (e) {
+                console.error("Error deleting folder: ", e);
+            }
+        },
         collection: collection(firestore, "folders")
 
     },
@@ -39,6 +47,14 @@ export const database = {
                 console.error("Error adding file: ", e);
             }
         },
+        remove: async (fileId) => {
+            const fileRef = doc(collection(firestore, "files"), fileId)
+            try {
+                await deleteDoc(fileRef)
+            } catch (e) {
+                console.error("Error deleting file: ", e);
+            }
+        },
         collection: collection(firestore, "files")
     },
     formatDoc: (doc) => {
@@ -46,6 +62,18 @@ export const database = {
     },
     getCurrentTimestamp: serverTimestamp,
 }
+
+export const storageManager = {
+    delete: async (filePath) => {
+        const fileRef = ref(storage, filePath)
+        try {
+            await deleteObject(fileRef)
+        } catch (error) {
+            console.error('Error deleting the file', error)
+        }
+    }
+}
+
 
 export const auth = getAuth(app)
 export const storage = getStorage(app);

@@ -16,7 +16,6 @@ export default function Dashboard() {
     const { state = {} } = useLocation()
 
     const { folder, childFolders, childFiles } = useFolder(folderId, state && state.folder)
-    // console.log(folder.path)
     return (
         <>
             <Navbar />
