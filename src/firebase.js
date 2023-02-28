@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, deleteDoc, query, where, getDocs, onSnapshot } from "firebase/firestore";
-import { deleteObject, getStorage, ref } from "firebase/storage";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, deleteDoc, query, where, getDocs, updateDoc } from "firebase/firestore";
+import { deleteObject, getStorage, ref, updateMetadata } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -60,6 +60,34 @@ export const database = {
             })
 
         },
+        update: async (folderId, changedFolder, currentUser) => {
+            const folderRef = doc(collection(firestore, "folders"), folderId)
+            try {
+                await updateDoc(folderRef, changedFolder)
+            } catch (e) {
+                console.error(e)
+            }
+            async function updatePath(startFolderId, changedFolder) {
+                const childFoldersQuery = query(collection(firestore, "folders"), where("parentId", "==", startFolderId), where("userId", "==", currentUser.uid))
+                const childFolders = await getDocs(childFoldersQuery)
+                childFolders.forEach(async (doc) => {
+                    const childFolderPath = doc.data().path
+                    for (let i = 0; i < childFolderPath.length; i++) {
+                        if (childFolderPath[i].id === folderId) {
+                            childFolderPath[i].name = changedFolder.name
+                            try {
+                                await updateDoc(doc.ref, { path: childFolderPath })
+                            } catch (e) {
+                                console.error(e)
+                            }
+                            break
+                        }
+                    }
+                    updatePath(doc.id, changedFolder)
+                })
+            }
+            updatePath(folderId, changedFolder)
+        },
         collection: collection(firestore, "folders")
 
     },
@@ -77,6 +105,14 @@ export const database = {
                 await deleteDoc(fileRef)
             } catch (e) {
                 console.error("Error deleting file: ", e);
+            }
+        },
+        update: async (fileId, changedFile) => {
+            const fileRef = doc(collection(firestore, "files"), fileId)
+            try {
+                await updateDoc(fileRef, changedFile)
+            } catch (e) {
+                console.error(e)
             }
         },
         collection: collection(firestore, "files")
