@@ -43,7 +43,6 @@ export default function Folder({ folder }) {
         if (folder.name !== inputRef.current.value) {
             database.folders.update(folder.id, { name: inputRef.current.value }, currentUser)
         }
-
     }
     return (
         <>

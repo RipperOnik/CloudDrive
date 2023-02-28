@@ -1,7 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFile } from '@fortawesome/free-solid-svg-icons'
-import { faTrashCan, faEdit } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faSave } from "@fortawesome/free-regular-svg-icons"
 import { Overlay, Popover, ButtonGroup } from 'react-bootstrap'
 import { useState, useRef } from 'react'
 import "../../styles/popover.css"
@@ -41,6 +41,10 @@ export default function File({ file }) {
             database.files.update(file.id, { name: inputRef.current.value })
         }
     }
+    function handleDownload() {
+        closePopover()
+        storageManager.download(file.url, file.name)
+    }
 
     return (
         <>
@@ -56,6 +60,9 @@ export default function File({ file }) {
                         </ActionButton>
                         <ActionButton icon={faEdit} onClick={openRenameModal}>
                             Rename
+                        </ActionButton>
+                        <ActionButton icon={faSave} onClick={handleDownload}>
+                            Download
                         </ActionButton>
                     </ButtonGroup>
                 </Popover>

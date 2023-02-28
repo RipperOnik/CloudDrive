@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, deleteDoc, query, where, getDocs, updateDoc } from "firebase/firestore";
-import { deleteObject, getStorage, ref, updateMetadata } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, ref } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -131,6 +131,23 @@ export const storageManager = {
         } catch (error) {
             console.error('Error deleting the file', error)
         }
+    },
+    download: async (url, fileName) => {
+        const data = await fetch(url)
+        const blob = await data.blob()
+        const objectUrl = URL.createObjectURL(blob)
+
+        const link = document.createElement('a')
+
+        link.setAttribute('href', objectUrl)
+        link.setAttribute('download', fileName)
+        link.style.display = 'none'
+
+        document.body.appendChild(link)
+
+        link.click()
+
+        document.body.removeChild(link)
     }
 }
 
