@@ -1,0 +1,31 @@
+.form-search {
+  display: flex;
+  position: relative;
+  flex-grow: 1;
+  max-width: 500px;
+}
+.form-search input[type="search"] {
+  height: 46px;
+  flex-grow: 1;
+  font-size: small;
+  padding-left: 50px;
+  padding-right: 20px;
+  border-radius: 8px;
+  border-width: 0;
+  background-color: #f1f3f4;
+}
+
+.form-search button {
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  left: 10px;
+  top: 6px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.form-search button:hover {
+  background-color: rgba(0, 0, 0, 0.12);
+}

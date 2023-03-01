@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder } from '@fortawesome/free-solid-svg-icons'
-import { Button, Overlay, Popover, ButtonGroup, Modal, Form } from 'react-bootstrap'
+import { Button, Overlay, Popover, ButtonGroup } from 'react-bootstrap'
 import ActionButton from './ActionButton'
 import { faTrashCan, faEdit } from "@fortawesome/free-regular-svg-icons"
 import { database } from '../../firebase'
