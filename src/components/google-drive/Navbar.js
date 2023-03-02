@@ -103,7 +103,9 @@ export default function NavbarComponent() {
                 }
             } else {
                 // go to search dashboard
-                navigate(`/search/${text}`)
+                if (text.length > 0) {
+                    navigate(`/search/${text}`)
+                }
             }
             closeTooltip()
         }
@@ -121,7 +123,7 @@ export default function NavbarComponent() {
                         show={show}
                         width={target.current ? target.current.offsetWidth : 0}
                         target={<input type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text} onClick={() => setShow(true)} onBlur={() => setTimeout(closeTooltip, 10)} onKeyDown={handleKeyDown} />}>
-                        {elements && elements.map((element, index) => {
+                        {elements && elements.slice(0, 7).map((element, index) => {
                             return <SearchResult element={element} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} key={element.id} />
                         })}
                     </SearchTooltip>
