@@ -1,17 +1,34 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Navbar, Nav, Container } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import "../../styles/search.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import SearchTooltip from './SearchTooltip'
 import SearchResult from './SearchResult'
+import { useFolder } from '../../hooks/useFolder'
 
 export default function NavbarComponent() {
-    const [text, setText] = useState('')
+    const [text, setText] = useState("")
     const [width, setWidth] = useState(0)
     const target = useRef()
     const [show, setShow] = useState(false)
+    const [activeIndex, setActiveIndex] = useState(-1)
+
+    const { allFolders, allFiles } = useFolder()
+    const navigate = useNavigate()
+    const initialElements = useMemo(() => {
+        return allFiles && allFolders && allFiles.concat(allFolders)
+    }, [allFiles, allFolders])
+
+    const [elements, setElements] = useState([])
+
+    useEffect(() => {
+        if (initialElements) {
+            setElements(initialElements.filter(e => (text === "") || e.name.toLowerCase().includes(text.toLowerCase())))
+        }
+    }, [initialElements])
+
 
     function debouncer(originalFunction) {
         let timeout = null
@@ -25,15 +42,17 @@ export default function NavbarComponent() {
         }
     }
     function search(text) {
-        if (text.length > 0) {
-            console.log(`searching for ${text}`)
+        console.log('searching', text)
+        if (initialElements) {
+            const newElements = initialElements.filter(e => (text === "") || e.name.toLowerCase().includes(text.toLowerCase()))
+            setElements(newElements)
         }
     }
-    const debouncedSearch = useRef(debouncer(search))
+    const debouncedSearch = useMemo(() => debouncer(search), [initialElements])
 
     useEffect(() => {
-        debouncedSearch.current(text)
-    }, [text])
+        debouncedSearch(text)
+    }, [text, debouncedSearch])
 
 
     function handleSearch(e) {
@@ -53,7 +72,7 @@ export default function NavbarComponent() {
     useEffect(() => {
         myObserver.observe(target.current)
         return () => myObserver.disconnect()
-    }, [target.current])
+    }, [myObserver])
 
     function handleKeyDown(e) {
         const { key } = e;
@@ -75,20 +94,21 @@ export default function NavbarComponent() {
 
         // select the current item
         if (key === "Enter") {
-            // take current element with activeIndex
-            // check if it is a file or folder
-            // if it is a folder, use navigate
-            // else, use window.open("URL", "_blank");
-            console.log('enter')
+            e.preventDefault()
+            if (activeIndex >= 0) {
+                const isFile = typeof elements[activeIndex].url !== 'undefined'
+                if (isFile) {
+                    window.open(elements[activeIndex].url, "_blank")
+                } else {
+                    navigate(`/folder/${elements[activeIndex].id}`)
+                }
+            } else {
+                // go to search page
+            }
+            closeTooltip()
         }
 
     }
-    const [activeIndex, setActiveIndex] = useState(-1)
-
-    const elements = [{ name: 'folder' }, { url: 'https://www.youtube.com/', name: 'file' }]
-
-
-
 
 
     return (
@@ -102,8 +122,8 @@ export default function NavbarComponent() {
                         show={show}
                         width={target.current ? target.current.offsetWidth : 0}
                         target={<input type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text} onClick={() => setShow(true)} onBlur={() => setTimeout(closeTooltip, 10)} onKeyDown={handleKeyDown} />}>
-                        {elements.map((element, index) => {
-                            return <SearchResult element={element} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} />
+                        {elements && elements.map((element, index) => {
+                            return <SearchResult element={element} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} key={element.id} />
                         })}
                     </SearchTooltip>
 

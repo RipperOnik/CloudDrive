@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, deleteDoc, query, where, getDocs, updateDoc } from "firebase/firestore";
-import { deleteObject, getDownloadURL, getStorage, ref } from "firebase/storage";
+import { deleteObject, getStorage, ref } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -122,6 +122,7 @@ export const database = {
     },
     getCurrentTimestamp: serverTimestamp,
 }
+
 
 export const storageManager = {
     delete: async (filePath) => {

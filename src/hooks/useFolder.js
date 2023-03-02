@@ -8,7 +8,9 @@ const ACTIONS = {
     SELECT_FOLDER: 'select-folder',
     UPDATE_FOLDER: 'update-folder',
     SET_CHILD_FOLDERS: 'set-child-folders',
-    SET_CHILD_FILES: 'set-child-files'
+    SET_CHILD_FILES: 'set-child-files',
+    SET_ALL_FOLDERS: 'set-all-folders',
+    SET_ALL_FILES: 'set-all-files'
 }
 // mimicing the root folder that doesn't exist in database
 export const ROOT_FOLDER = { name: 'Root', id: null, path: [] }
@@ -37,6 +39,16 @@ function reducer(state, { type, payload }) {
                 ...state,
                 childFiles: payload.childFiles
             }
+        case ACTIONS.SET_ALL_FOLDERS:
+            return {
+                ...state,
+                allFolders: payload.allFolders
+            }
+        case ACTIONS.SET_ALL_FILES:
+            return {
+                ...state,
+                allFiles: payload.allFiles
+            }
         default:
             return state
     }
@@ -48,7 +60,9 @@ export function useFolder(folderId = null, folder = null) {
         folderId: folderId,
         folder: folder,
         childFolders: [],
-        childFiles: []
+        childFiles: [],
+        allFolders: [],
+        allFiles: []
     })
     const { currentUser } = useAuth()
 
@@ -114,6 +128,33 @@ export function useFolder(folderId = null, folder = null) {
             })
         })
     }, [folderId, currentUser])
+
+    // get all folders
+    useEffect(() => {
+        const q = query(database.folders.collection, where("userId", "==", currentUser.uid))
+
+        return onSnapshot(q, (snapshot) => {
+            dispatch({
+                type: ACTIONS.SET_ALL_FOLDERS,
+                payload: { allFolders: snapshot.docs.map(database.formatDoc) }
+            })
+        })
+    }, [currentUser])
+
+
+    // get all files
+    useEffect(() => {
+        const q = query(database.files.collection, where("userId", "==", currentUser.uid))
+
+        return onSnapshot(q, (snapshot) => {
+            dispatch({
+                type: ACTIONS.SET_ALL_FILES,
+                payload: { allFiles: snapshot.docs.map(database.formatDoc) }
+            })
+        })
+    }, [currentUser])
+
+
 
 
 

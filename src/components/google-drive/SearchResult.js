@@ -17,7 +17,7 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
 
     if (element.url) {
         return <a
-            className='d-flex w-100 align-items-center text-truncate search-result'
+            className='d-flex w-100 align-items-center search-result'
             target="_blank"
             href={element.url}
             style={{ backgroundColor: active ? 'rgba(0, 0, 0, 0.12)' : '' }}
@@ -25,18 +25,19 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
             onMouseLeave={handleMouseLeave}
         >
             <FontAwesomeIcon icon={faFile} style={{ marginRight: '15px' }} />
-            {element.name}
+            <span className='text-truncate'>{element.name}</span>
+
         </a>
     } else {
         return <Link
-            className='d-flex w-100 align-items-center text-truncate search-result'
+            className='d-flex w-100 align-items-center search-result'
             to={`/folder/${element.id}`}
             style={{ backgroundColor: active ? 'rgba(0, 0, 0, 0.12)' : '' }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <FontAwesomeIcon icon={faFolder} style={{ marginRight: '10px' }} />
-            {element.name}
+            <span className='text-truncate'>{element.name}</span>
         </Link>
     }
 
