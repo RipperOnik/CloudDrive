@@ -42,7 +42,6 @@ export default function NavbarComponent() {
         }
     }
     function search(text) {
-        console.log('searching', text)
         if (initialElements) {
             const newElements = initialElements.filter(e => (text === "") || e.name.toLowerCase().includes(text.toLowerCase()))
             setElements(newElements)
@@ -103,13 +102,13 @@ export default function NavbarComponent() {
                     navigate(`/folder/${elements[activeIndex].id}`)
                 }
             } else {
-                // go to search page
+                // go to search dashboard
+                navigate(`/search/${text}`)
             }
             closeTooltip()
         }
 
     }
-
 
     return (
         <Navbar bg="white" expand="sm">
