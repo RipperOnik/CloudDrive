@@ -25,9 +25,9 @@ export default function Dashboard() {
                     <AddFileButton currentFolder={folder} />
                     <AddFolderButton currentFolder={folder} />
                 </Stack>
-                <div className='mb-2'>Folders</div>
+                {childFolders.length > 0 && <div className='mb-2'>Folders</div>}
                 {childFolders.length > 0 && (
-                    <Stack direction="horizontal" className='flex-wrap'>
+                    <Stack direction="horizontal" className='flex-wrap' gap={3}>
                         {childFolders.map(childFolder => {
                             return <Folder folder={childFolder} key={childFolder.id} />
 
@@ -35,7 +35,8 @@ export default function Dashboard() {
                     </Stack>
                 )}
                 {childFolders.length > 0 && childFiles.length > 0 && <hr />}
-                <div className='mb-2'>Files</div>
+                {childFiles.length > 0 && <div className='mb-2'>Files</div>}
+
                 {childFiles.length > 0 && (
                     <Stack direction="horizontal" className='flex-wrap' gap={3}>
                         {childFiles.map(childFile => {

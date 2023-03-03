@@ -21,7 +21,7 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
             className='d-flex w-100 align-items-center search-result text-truncate'
             target="_blank"
             href={element.url}
-            style={{ backgroundColor: active ? 'rgba(0, 0, 0, 0.12)' : '' }}
+            style={{ backgroundColor: active ? 'rgba(0, 0, 0, 0.12)' : '', paddingRight: "20px" }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -40,7 +40,7 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
         return <Link
             className='d-flex w-100 align-items-center search-result'
             to={`/folder/${element.id}`}
-            style={{ backgroundColor: active ? 'rgba(0, 0, 0, 0.12)' : '' }}
+            style={{ backgroundColor: active ? 'rgba(0, 0, 0, 0.12)' : '', paddingRight: "20px" }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
