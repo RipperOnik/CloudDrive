@@ -46,11 +46,11 @@ export default function Folder({ folder }) {
     }
     return (
         <>
-            <Button as={Link} to={`/folder/${folder.id}`} state={{ folder: folder }}
-                variant="outline-dark" className='d-flex align-items-center' ref={target} onContextMenu={handleRightClick} style={{ gap: "8px", width: "200px" }}>
-                <FontAwesomeIcon icon={faFolder} />
+            <Link to={`/folder/${folder.id}`} state={{ folder: folder }}
+                className='file d-flex align-items-center' ref={target} onContextMenu={handleRightClick} style={{ gap: "8px", width: "200px" }}>
+                <img src="./images/folder.svg" alt="folder" style={{ width: "25px" }} />
                 <span className='text-truncate'>{folder.name}</span>
-            </Button>
+            </Link>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
                 <Popover className="popover-shadow">
                     <ButtonGroup vertical>

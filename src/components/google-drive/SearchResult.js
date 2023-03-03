@@ -15,8 +15,10 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
     }
     const [fileName, fileExtension] = divideFileName(element.name)
 
+    const isFile = element.url
 
-    if (element.url) {
+
+    if (isFile) {
         return <a
             className='d-flex w-100 align-items-center search-result text-truncate'
             target="_blank"
@@ -28,7 +30,8 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
 
             <div className='d-flex justify-content-between w-100' style={{ gap: "10px" }}>
                 <div className='d-flex align-items-center text-truncate' style={{ gap: "15px" }}>
-                    <FontAwesomeIcon icon={faFile} />
+                    {/* <FontAwesomeIcon icon={faFile} /> */}
+                    <img src={`./images/${element.type}.svg`} alt="file" style={{ width: "25px" }} onError={(e) => e.target.src = "./images/file.svg"} />
                     <div className='d-flex text-truncate'>
                         <span className='text-truncate'>{fileName}</span>
                         <span>{fileExtension}</span>
@@ -44,8 +47,13 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <FontAwesomeIcon icon={faFolder} style={{ marginRight: '10px' }} />
-            <span className='text-truncate'>{element.name}</span>
+            <div className='d-flex justify-content-between w-100' style={{ gap: "10px" }}>
+                <div className='d-flex align-items-center text-truncate' style={{ gap: "15px" }}>
+                    <img src="./images/folder.svg" alt="folder" style={{ width: "25px" }} />
+                    <span className='text-truncate'>{element.name}</span>
+                </div>
+            </div>
+
         </Link>
     }
 

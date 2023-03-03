@@ -8,6 +8,7 @@ import "../../styles/popover.css"
 import { database, storageManager } from '../../firebase'
 import ActionButton from './ActionButton'
 import RenameModal from './RenameModal'
+import "../../styles/file.css"
 
 export default function File({ file }) {
     const [showPopover, setShowPopover] = useState(false);
@@ -49,8 +50,9 @@ export default function File({ file }) {
 
     return (
         <>
-            <a href={file.url} target="_blank" className='btn btn-outline-dark text-truncate d-flex align-items-center' onContextMenu={handleRightClick} ref={target} style={{ gap: "8px", width: "200px" }}>
-                <FontAwesomeIcon icon={faFile} />
+            <a href={file.url} target="_blank" className='file text-truncate d-flex align-items-center' onContextMenu={handleRightClick} ref={target} style={{ gap: "8px", width: "200px" }}>
+                {/* <FontAwesomeIcon icon={faFile} /> */}
+                <img src={`./images/${file.type}.svg`} alt="file" style={{ width: "25px" }} onError={(e) => e.target.src = "./images/file.svg"} />
                 <div className='d-flex flex-grow-1 text-truncate'>
                     <div className='text-truncate'>{fileName}</div>
                     <span>{fileExtension}</span>
@@ -77,6 +79,7 @@ export default function File({ file }) {
 
     )
 }
+
 export function divideFileName(fullFileName) {
     for (let i = fullFileName.length - 1; i >= 0; i--) {
         const code = fullFileName.charCodeAt(i)

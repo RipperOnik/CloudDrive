@@ -9,6 +9,16 @@ import { ROOT_FOLDER } from '../../hooks/useFolder';
 import { v4 as uuidV4 } from 'uuid'
 import { Toast, ProgressBar } from 'react-bootstrap';
 import { query, where, getDocs, updateDoc } from "firebase/firestore";
+import { divideFileName } from './File';
+
+
+
+const convertToType = {
+    ".doc": "word", ".docx": "word", ".odt": "word", ".pages": "word",
+    ".pdf": "pdf",
+    ".xlsx": "excel", ".xls": "excel", ".csv": "excel",
+    ".pptx": "powerpoint", ".pptm": "powerpoint", ".ppt": "powerpoint"
+}
 
 export default function AddFileButton({ currentFolder }) {
 
@@ -29,6 +39,7 @@ export default function AddFileButton({ currentFolder }) {
         const fullPath = `/files/${currentUser.uid}/${filePath}`
         const storageRef = ref(storage, fullPath)
         const uploadTask = uploadBytesResumable(storageRef, file);
+
 
         uploadTask.on('state_changed',
             (snapshot) => {
@@ -66,13 +77,20 @@ export default function AddFileButton({ currentFolder }) {
                         if (existingFile) {
                             updateDoc(existingFile.ref, { url: url })
                         } else {
+                            let fileType = file.type.split("/")[0]
+                            if (fileType === "application") {
+                                const fileExtension = divideFileName(file.name)[1]
+                                fileType = convertToType[fileExtension]
+                            }
                             database.files.add({
                                 url: url,
                                 name: file.name,
                                 createdAt: database.getCurrentTimestamp(),
                                 folderId: currentFolder.id,
                                 userId: currentUser.uid,
-                                fileStoragePath: fullPath
+                                fileStoragePath: fullPath,
+                                type: fileType,
+                                size: file.size
                             })
                         }
                     })
