@@ -20,28 +20,26 @@ export default function Dashboard() {
         <>
             <Navbar />
             <Container fluid>
-                <Stack direction='horizontal' gap={2} className='align-items-center'>
+                <Stack direction='horizontal' gap={2} className='align-items-center mb-4'>
                     <FolderBreadcrumbs currentFolder={folder} />
                     <AddFileButton currentFolder={folder} />
                     <AddFolderButton currentFolder={folder} />
                 </Stack>
-
+                <div className='mb-2'>Folders</div>
                 {childFolders.length > 0 && (
                     <Stack direction="horizontal" className='flex-wrap'>
                         {childFolders.map(childFolder => {
-                            return <div key={childFolder.id} className='p-2' style={{ maxWidth: '200px' }}>
-                                <Folder folder={childFolder} />
-                            </div>
+                            return <Folder folder={childFolder} key={childFolder.id} />
+
                         })}
                     </Stack>
                 )}
                 {childFolders.length > 0 && childFiles.length > 0 && <hr />}
+                <div className='mb-2'>Files</div>
                 {childFiles.length > 0 && (
-                    <Stack direction="horizontal" className='flex-wrap'>
+                    <Stack direction="horizontal" className='flex-wrap' gap={3}>
                         {childFiles.map(childFile => {
-                            return <div key={childFile.id} className='p-2' style={{ maxWidth: '200px' }}>
-                                <File file={childFile} />
-                            </div>
+                            return <File file={childFile} key={childFile.id} />
                         })}
                     </Stack>
                 )}

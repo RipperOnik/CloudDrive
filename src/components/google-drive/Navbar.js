@@ -88,7 +88,7 @@ export default function NavbarComponent() {
 
         // hide search results
         if (key === "Escape") {
-            closeTooltip()
+            target.current.blur()
         }
 
         // select the current item

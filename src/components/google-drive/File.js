@@ -14,6 +14,7 @@ export default function File({ file }) {
     const target = useRef(null);
     const [showModal, setShowModal] = useState(false)
     const inputRef = useRef(null)
+    const [fileName, fileExtension] = divideFileName(file.name)
 
     function handleRightClick(e) {
         e.preventDefault()
@@ -48,9 +49,12 @@ export default function File({ file }) {
 
     return (
         <>
-            <a href={file.url} target="_blank" className='btn btn-outline-dark text-truncate w-100' onContextMenu={handleRightClick} ref={target}>
-                <FontAwesomeIcon icon={faFile} style={{ marginRight: "8px" }} />
-                {file.name}
+            <a href={file.url} target="_blank" className='btn btn-outline-dark text-truncate d-flex align-items-center' onContextMenu={handleRightClick} ref={target} style={{ gap: "8px", width: "200px" }}>
+                <FontAwesomeIcon icon={faFile} />
+                <div className='d-flex flex-grow-1 text-truncate'>
+                    <div className='text-truncate'>{fileName}</div>
+                    <span>{fileExtension}</span>
+                </div>
             </a>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
                 <Popover className="popover-shadow">
@@ -73,4 +77,14 @@ export default function File({ file }) {
 
     )
 }
+export function divideFileName(fullFileName) {
+    for (let i = fullFileName.length - 1; i >= 0; i--) {
+        const code = fullFileName.charCodeAt(i)
+        if (code === 46) {
+            return [fullFileName.slice(0, i), fullFileName.slice(i)]
+        }
+    }
+    return fullFileName
+}
+
 

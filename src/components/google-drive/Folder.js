@@ -47,9 +47,9 @@ export default function Folder({ folder }) {
     return (
         <>
             <Button as={Link} to={`/folder/${folder.id}`} state={{ folder: folder }}
-                variant="outline-dark" className='text-truncate w-100' ref={target} onContextMenu={handleRightClick}>
-                <FontAwesomeIcon icon={faFolder} style={{ marginRight: "8px" }} />
-                {folder.name}
+                variant="outline-dark" className='d-flex align-items-center' ref={target} onContextMenu={handleRightClick} style={{ gap: "8px", width: "200px" }}>
+                <FontAwesomeIcon icon={faFolder} />
+                <span className='text-truncate'>{folder.name}</span>
             </Button>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
                 <Popover className="popover-shadow">
@@ -66,6 +66,5 @@ export default function Folder({ folder }) {
 
             <RenameModal show={showModal} closeModal={closeModal} onSubmit={handleRename} defaultValue={folder.name} inputRef={inputRef} />
         </>
-
     )
 }
