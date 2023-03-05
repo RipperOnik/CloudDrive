@@ -124,9 +124,7 @@ export default function NavbarComponent({ resetActiveIndex, currentFolder }) {
     function goHome() {
         resetActiveIndex()
         setActiveIndex(-1)
-        if (currentFolder !== ROOT_FOLDER) {
-            navigate('/')
-        }
+        navigate('/')
     }
 
 

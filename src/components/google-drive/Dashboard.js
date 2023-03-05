@@ -27,11 +27,13 @@ export default function Dashboard() {
     const isSearch = typeof query !== 'undefined'
 
 
+
     const { folder, childFolders, childFiles, allFolders, allFiles } = useFolder(folderId, state && state.folder)
 
 
-    const folders = isSearch ? allFolders && allFolders.filter(f => f.name.toLowerCase().includes(query.toLowerCase())) : childFolders
-    const files = isSearch ? allFiles && allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase())) : childFiles
+    const folders = isSearch ? (allFolders && allFolders.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))) : childFolders
+    const files = allFiles && isSearch ? (allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))) : childFiles
+
 
     const [activeIndex, setActiveIndex] = useState(-1)
     const elements = folders ? folders.concat(files) : []

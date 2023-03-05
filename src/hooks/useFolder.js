@@ -19,8 +19,9 @@ function reducer(state, { type, payload }) {
     switch (type) {
         case ACTIONS.SELECT_FOLDER:
             return {
+                ...state,
                 folderId: payload.folderId,
-                folder: payload.folder,
+                folder: payload.folder ?? ROOT_FOLDER,
                 childFiles: [],
                 childFolders: []
             }
@@ -71,6 +72,7 @@ export function useFolder(folderId = null, folder = null) {
     useEffect(() => {
         dispatch({ type: ACTIONS.SELECT_FOLDER, payload: { folderId, folder } })
 
+
     }, [folderId, folder])
 
     // update current folder
@@ -112,7 +114,7 @@ export function useFolder(folderId = null, folder = null) {
                 payload: { childFolders: snapshot.docs.map(database.formatDoc) }
             })
         })
-    }, [folderId, currentUser])
+    }, [folderId, currentUser, folder])
 
 
     // update child files 
@@ -129,7 +131,7 @@ export function useFolder(folderId = null, folder = null) {
                 payload: { childFiles: snapshot.docs.map(database.formatDoc) }
             })
         })
-    }, [folderId, currentUser])
+    }, [folderId, currentUser, folder])
 
     // get all folders
     useEffect(() => {
