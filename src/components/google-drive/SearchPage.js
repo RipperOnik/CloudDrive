@@ -16,16 +16,15 @@ export default function SearchPage() {
         <>
             <Navbar />
             <Container fluid>
-                <h4 className='mb-4'>Search results for {query}</h4>
+                <h5 className='mb-4'>Search results for {query}</h5>
                 {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                 {folders && folders.length > 0 && (
-                    <Stack direction="horizontal" className='flex-wrap' gap={3}>
+                    <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
                         {folders.map(childFolder => {
                             return <Folder folder={childFolder} key={childFolder.id} />
                         })}
                     </Stack>
                 )}
-                {folders && files && folders.length > 0 && files.length > 0 && <hr />}
                 {files && files.length > 0 && <div className='mb-2'>Files</div>}
                 {files && files.length > 0 && (
                     <Stack direction="horizontal" className='flex-wrap' gap={3}>

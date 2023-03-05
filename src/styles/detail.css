@@ -1,0 +1,30 @@
+.details {
+  padding: 15px;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 20px;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.details-file {
+  text-decoration: none;
+  font-size: 30px;
+  color: #212529;
+}
+.details-file:hover {
+  color: #212529;
+}
+
+.details-body {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+}

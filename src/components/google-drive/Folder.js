@@ -1,10 +1,8 @@
 import React, { useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFolder } from '@fortawesome/free-solid-svg-icons'
-import { Button, Overlay, Popover, ButtonGroup } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import { Overlay, Popover, ButtonGroup } from 'react-bootstrap'
 import ActionButton from './ActionButton'
-import { faTrashCan, faEdit } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faCircleQuestion } from "@fortawesome/free-regular-svg-icons"
 import { database } from '../../firebase'
 import { useAuth } from '../../contexts/AuthContext'
 import RenameModal from './RenameModal'
@@ -12,12 +10,14 @@ import RenameModal from './RenameModal'
 
 
 
-export default function Folder({ folder }) {
+export default function Folder({ folder, index, activeIndex, setActiveIndex, setShowDetails }) {
     const [showPopover, setShowPopover] = useState(false);
     const [showModal, setShowModal] = useState(false)
     const inputRef = useRef(null)
     const target = useRef(null);
+    const navigate = useNavigate()
     const { currentUser } = useAuth()
+    const isActive = index === activeIndex
     function handleRightClick(e) {
         e.preventDefault()
         setShowPopover(true)
@@ -44,13 +44,26 @@ export default function Folder({ folder }) {
             database.folders.update(folder.id, { name: inputRef.current.value }, currentUser)
         }
     }
+    function handleClick(e) {
+        if (e.detail === 1) {
+            setActiveIndex(index)
+        }
+        else if (e.detail === 2) {
+            navigate(`/folder/${folder.id}`, { state: { folder: folder } })
+        }
+    }
+    function openDetails() {
+        setShowDetails(true)
+        setActiveIndex(index)
+        closePopover()
+    }
     return (
         <>
-            <Link to={`/folder/${folder.id}`} state={{ folder: folder }}
-                className='file d-flex align-items-center' ref={target} onContextMenu={handleRightClick} style={{ gap: "8px", width: "200px" }}>
+            <div onClick={handleClick}
+                className={`file d-flex align-items-center ${isActive ? "file--active" : ''}`} ref={target} onContextMenu={handleRightClick} style={{ gap: "8px", width: "200px", cursor: "pointer", display: "inline-block" }}>
                 <img src="./images/folder.svg" alt="folder" style={{ width: "25px" }} />
                 <span className='text-truncate'>{folder.name}</span>
-            </Link>
+            </div>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
                 <Popover className="popover-shadow">
                     <ButtonGroup vertical>
@@ -60,10 +73,12 @@ export default function Folder({ folder }) {
                         <ActionButton icon={faEdit} onClick={openRenameModal}>
                             Rename
                         </ActionButton>
+                        <ActionButton icon={faCircleQuestion} onClick={openDetails}>
+                            Show details
+                        </ActionButton>
                     </ButtonGroup>
                 </Popover>
             </Overlay>
-
             <RenameModal show={showModal} closeModal={closeModal} onSubmit={handleRename} defaultValue={folder.name} inputRef={inputRef} />
         </>
     )

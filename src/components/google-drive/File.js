@@ -1,7 +1,5 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFile } from '@fortawesome/free-solid-svg-icons'
-import { faTrashCan, faEdit, faSave } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faCircleQuestion, faSave } from "@fortawesome/free-regular-svg-icons"
 import { Overlay, Popover, ButtonGroup } from 'react-bootstrap'
 import { useState, useRef } from 'react'
 import "../../styles/popover.css"
@@ -10,12 +8,14 @@ import ActionButton from './ActionButton'
 import RenameModal from './RenameModal'
 import "../../styles/file.css"
 
-export default function File({ file }) {
+export default function File({ file, index, activeIndex, setActiveIndex, setShowDetails }) {
     const [showPopover, setShowPopover] = useState(false);
     const target = useRef(null);
     const [showModal, setShowModal] = useState(false)
     const inputRef = useRef(null)
     const [fileName, fileExtension] = divideFileName(file.name)
+
+    const isActive = index === activeIndex
 
     function handleRightClick(e) {
         e.preventDefault()
@@ -47,17 +47,29 @@ export default function File({ file }) {
         closePopover()
         storageManager.download(file.url, file.name)
     }
+    function handleClick(e) {
+        if (e.detail === 1) {
+            setActiveIndex(index)
+        }
+        else if (e.detail === 2) {
+            window.open(file.url, "_blank")
+        }
+    }
+    function openDetails() {
+        setShowDetails(true)
+        setActiveIndex(index)
+        closePopover()
+    }
 
     return (
         <>
-            <a href={file.url} target="_blank" className='file text-truncate d-flex align-items-center' onContextMenu={handleRightClick} ref={target} style={{ gap: "8px", width: "200px" }}>
-                {/* <FontAwesomeIcon icon={faFile} /> */}
+            <div className={`file text-truncate d-flex align-items-center ${isActive ? "file--active" : ''}`} onContextMenu={handleRightClick} ref={target} style={{ gap: "8px", width: "200px", cursor: "pointer", display: "inline-block" }} onClick={handleClick}>
                 <img src={`./images/${file.type}.svg`} alt="file" style={{ width: "25px" }} onError={(e) => e.target.src = "./images/file.svg"} />
                 <div className='d-flex flex-grow-1 text-truncate'>
                     <div className='text-truncate'>{fileName}</div>
                     <span>{fileExtension}</span>
                 </div>
-            </a>
+            </div>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
                 <Popover className="popover-shadow">
                     <ButtonGroup vertical>
@@ -69,6 +81,9 @@ export default function File({ file }) {
                         </ActionButton>
                         <ActionButton icon={faSave} onClick={handleDownload}>
                             Download
+                        </ActionButton>
+                        <ActionButton icon={faCircleQuestion} onClick={openDetails}>
+                            Show details
                         </ActionButton>
                     </ButtonGroup>
                 </Popover>

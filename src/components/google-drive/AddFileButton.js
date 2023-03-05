@@ -85,7 +85,7 @@ export default function AddFileButton({ currentFolder }) {
                             database.files.add({
                                 url: url,
                                 name: file.name,
-                                createdAt: database.getCurrentTimestamp(),
+                                createdAt: new Date().toString(),
                                 folderId: currentFolder.id,
                                 userId: currentUser.uid,
                                 fileStoragePath: fullPath,

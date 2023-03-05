@@ -4,16 +4,14 @@
   padding: 10px;
   text-decoration: none;
   color: black;
-  transition: translate ease-in-out 100ms, box-shadow ease-in-out 100ms,
-    border ease-in-out 100ms;
   background-color: white;
 }
 
-.file:focus,
 .file:hover {
-  translate: 0 -5px;
-  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2);
   color: black;
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.file--active {
+  border: 1px solid blue;
+  background-color: rgb(227, 234, 247) !important;
 }
