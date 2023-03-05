@@ -51,9 +51,11 @@ export default function Folder({ folder, index, activeIndex, setActiveIndex, set
         }
         else if (e.detail === 2) {
             navigate(`/folder/${folder.id}`, { state: { folder: folder } })
+            setActiveIndex(-1)
         }
     }
-    function openDetails() {
+    function openDetails(e) {
+        e.stopPropagation()
         setShowDetails(true)
         setActiveIndex(index)
         closePopover()

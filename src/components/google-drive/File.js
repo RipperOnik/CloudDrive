@@ -56,7 +56,8 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
             window.open(file.url, "_blank")
         }
     }
-    function openDetails() {
+    function openDetails(e) {
+        e.stopPropagation()
         setShowDetails(true)
         setActiveIndex(index)
         closePopover()
