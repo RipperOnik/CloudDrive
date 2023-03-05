@@ -45,6 +45,7 @@ export default function Folder({ folder, index, activeIndex, setActiveIndex, set
         }
     }
     function handleClick(e) {
+        e.stopPropagation()
         if (e.detail === 1) {
             setActiveIndex(index)
         }

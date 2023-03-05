@@ -48,6 +48,7 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
         storageManager.download(file.url, file.name)
     }
     function handleClick(e) {
+        e.stopPropagation()
         if (e.detail === 1) {
             setActiveIndex(index)
         }
@@ -61,9 +62,12 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
         closePopover()
     }
 
+
     return (
         <>
-            <div className={`file text-truncate d-flex align-items-center ${isActive ? "file--active" : ''}`} onContextMenu={handleRightClick} ref={target} style={{ gap: "8px", width: "200px", cursor: "pointer", display: "inline-block" }} onClick={handleClick}>
+            <div className={`file text-truncate d-flex align-items-center ${isActive ? "file--active" : ''}`} onContextMenu={handleRightClick} ref={target}
+                style={{ gap: "8px", width: "200px", cursor: "pointer", display: "inline-block" }} onClick={handleClick}
+            >
                 <img src={`./images/${file.type}.svg`} alt="file" style={{ width: "25px" }} onError={(e) => e.target.src = "./images/file.svg"} />
                 <div className='d-flex flex-grow-1 text-truncate'>
                     <div className='text-truncate'>{fileName}</div>

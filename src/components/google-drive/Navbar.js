@@ -73,6 +73,10 @@ export default function NavbarComponent() {
         return () => myObserver.disconnect()
     }, [myObserver])
 
+    function onHideSearchTooltip() {
+        setTimeout(closeTooltip, 10)
+        setActiveIndex(-1)
+    }
     function handleKeyDown(e) {
         const { key } = e;
 
@@ -94,6 +98,7 @@ export default function NavbarComponent() {
         // select the current item
         if (key === "Enter") {
             e.preventDefault()
+            target.current.blur()
             if (activeIndex >= 0) {
                 const isFile = typeof elements[activeIndex].url !== 'undefined'
                 if (isFile) {
@@ -115,14 +120,15 @@ export default function NavbarComponent() {
     return (
         <Navbar bg="white" expand="sm">
             <Container fluid>
-                <Navbar.Brand as={Link} to="/">
+                <Navbar.Brand as={Link} to="/" className='d-flex align-items-center' style={{ gap: "10px" }}>
+                    <img src="./images/cloud.svg" alt="logo" width={40} height={40} />
                     Drive
                 </Navbar.Brand>
                 <form className='form-search' onSubmit={handleSearch}>
                     <SearchTooltip
                         show={show}
                         width={target.current ? target.current.offsetWidth : 0}
-                        target={<input type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text} onClick={() => setShow(true)} onBlur={() => setTimeout(closeTooltip, 10)} onKeyDown={handleKeyDown} />}>
+                        target={<input type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text} onClick={() => setShow(true)} onBlur={onHideSearchTooltip} onKeyDown={handleKeyDown} />}>
                         {elements && elements.slice(0, 7).map((element, index) => {
                             return <SearchResult element={element} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} key={element.id} />
                         })}
@@ -141,4 +147,8 @@ export default function NavbarComponent() {
             </Container>
         </Navbar>
     )
+
 }
+
+
+

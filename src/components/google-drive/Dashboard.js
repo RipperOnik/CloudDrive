@@ -10,7 +10,7 @@ import AddFileButton from './AddFileButton'
 import File from './File'
 import Details from './Details'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan, faEdit, faSave, faCircleQuestion } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faCircleQuestion } from "@fortawesome/free-regular-svg-icons"
 import "../../styles/dashboard.css"
 import { database, storageManager } from '../../firebase'
 import RenameModal from "./RenameModal"
@@ -21,13 +21,13 @@ export default function Dashboard() {
     const { folderId } = useParams()
     // getting state from links to render paths faster
     const { state = {} } = useLocation()
+
     const { currentUser } = useAuth()
 
     const { folder, childFolders, childFiles } = useFolder(folderId, state && state.folder)
     const [activeIndex, setActiveIndex] = useState(-1)
     const elements = childFolders.concat(childFiles)
     const [showDetails, setShowDetails] = useState(false)
-
 
     const [showModal, setShowModal] = useState(false)
     const inputRef = useRef(null)
@@ -74,19 +74,17 @@ export default function Dashboard() {
         <>
             <Navbar />
             <Container fluid>
-                <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", borderBottom: "1px solid rgba(0, 0, 0, 0.2)" }}>
+                <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
                     <FolderBreadcrumbs currentFolder={folder} />
                     {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 10px" }}>
                         <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                         <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={() => setShowModal(true)} />
                         <FontAwesomeIcon icon={faCircleQuestion} className="circular-button" onClick={toggleDetails} />
                     </Stack>}
-
-
                     <AddFileButton currentFolder={folder} />
                     <AddFolderButton currentFolder={folder} />
                 </Stack>
-                <div className='d-flex'>
+                <div className='d-flex' onClick={() => setActiveIndex(-1)}>
                     <Container fluid style={{ padding: "15px 15px 15px 0" }}>
                         {childFolders.length > 0 && <div className='mb-2'>Folders</div>}
                         {childFolders.length > 0 && (
@@ -109,10 +107,7 @@ export default function Dashboard() {
                         )}
                     </Container>
                     {showDetails && <Details element={elements[activeIndex]} setShowDetails={setShowDetails} />}
-
-
                 </div>
-
             </Container>
             <RenameModal show={showModal} closeModal={() => setShowModal(false)} onSubmit={handleRename} defaultValue={elements[activeIndex] && elements[activeIndex].name} inputRef={inputRef} />
         </>
