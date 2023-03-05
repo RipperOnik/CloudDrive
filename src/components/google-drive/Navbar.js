@@ -7,8 +7,9 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import SearchTooltip from './SearchTooltip'
 import SearchResult from './SearchResult'
 import { useFolder } from '../../hooks/useFolder'
+import { ROOT_FOLDER } from '../../hooks/useFolder'
 
-export default function NavbarComponent() {
+export default function NavbarComponent({ resetActiveIndex, currentFolder }) {
     const [text, setText] = useState("")
     const [width, setWidth] = useState(0)
     const target = useRef()
@@ -76,6 +77,7 @@ export default function NavbarComponent() {
 
     function onHideSearchTooltip() {
         setTimeout(closeTooltip, 10)
+        resetActiveIndex()
         setActiveIndex(-1)
     }
     function handleKeyDown(e) {
@@ -119,13 +121,20 @@ export default function NavbarComponent() {
         }
         closeTooltip()
     }
+    function goHome() {
+        resetActiveIndex()
+        setActiveIndex(-1)
+        if (currentFolder !== ROOT_FOLDER) {
+            navigate('/')
+        }
+    }
 
 
 
     return (
         <Navbar bg="white" expand="sm">
             <Container fluid>
-                <Navbar.Brand as={Link} to="/" className='d-flex align-items-center' style={{ gap: "10px" }}>
+                <Navbar.Brand className='d-flex align-items-center' style={{ gap: "10px", cursor: "pointer" }} onClick={goHome}>
                     <img src="./images/cloud.svg" alt="logo" width={40} height={40} />
                     Drive
                 </Navbar.Brand>

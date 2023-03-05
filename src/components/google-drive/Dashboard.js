@@ -23,10 +23,18 @@ export default function Dashboard() {
     const { state = {} } = useLocation()
 
     const { currentUser } = useAuth()
+    const { query } = useParams()
+    const isSearch = typeof query !== 'undefined'
 
-    const { folder, childFolders, childFiles } = useFolder(folderId, state && state.folder)
+
+    const { folder, childFolders, childFiles, allFolders, allFiles } = useFolder(folderId, state && state.folder)
+
+
+    const folders = isSearch ? allFolders && allFolders.filter(f => f.name.toLowerCase().includes(query.toLowerCase())) : childFolders
+    const files = isSearch ? allFiles && allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase())) : childFiles
+
     const [activeIndex, setActiveIndex] = useState(-1)
-    const elements = childFolders.concat(childFiles)
+    const elements = folders ? folders.concat(files) : []
     const [showDetails, setShowDetails] = useState(false)
 
     const [showModal, setShowModal] = useState(false)
@@ -66,40 +74,45 @@ export default function Dashboard() {
     function toggleDetails() {
         setShowDetails(prev => !prev)
     }
+    function resetActiveIndex() {
+        setActiveIndex(-1)
+    }
+
 
 
 
 
     return (
         <>
-            <Navbar />
+            <Navbar resetActiveIndex={resetActiveIndex} currentFolder={folder} />
             <Container fluid>
-                <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
-                    <FolderBreadcrumbs currentFolder={folder} />
+                <Stack direction='horizontal' gap={2} className={`align-items-center pb-2 pt-2 ${isSearch ? 'justify-content-between' : ''}`} style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
+                    {isSearch ? <div>Search results for {query}</div> : <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex} />}
                     {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 10px" }}>
                         <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                         <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={() => setShowModal(true)} />
                         <FontAwesomeIcon icon={faCircleQuestion} className="circular-button" onClick={toggleDetails} />
                     </Stack>}
-                    <AddFileButton currentFolder={folder} />
-                    <AddFolderButton currentFolder={folder} />
+                    {!isSearch && <AddFileButton currentFolder={folder} />}
+                    {!isSearch && <AddFolderButton currentFolder={folder} />}
+
                 </Stack>
                 <div className='d-flex' onClick={() => setActiveIndex(-1)}>
                     <Container fluid style={{ padding: "15px 15px 15px 0" }}>
-                        {childFolders.length > 0 && <div className='mb-2'>Folders</div>}
-                        {childFolders.length > 0 && (
+                        {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
+                        {folders && folders.length > 0 && (
                             <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
-                                {childFolders.map((childFolder, index) => {
+                                {folders.map((childFolder, index) => {
                                     return <Folder folder={childFolder} key={childFolder.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} setShowDetails={setShowDetails} />
 
                                 })}
                             </Stack>
                         )}
 
-                        {childFiles.length > 0 && <div className='mb-2'>Files</div>}
-                        {childFiles.length > 0 && (
+                        {files && files.length > 0 && <div className='mb-2'>Files</div>}
+                        {files && files.length > 0 && (
                             <Stack direction="horizontal" className='flex-wrap' gap={3}>
-                                {childFiles.map((childFile, index) => {
+                                {files.map((childFile, index) => {
                                     const newIndex = childFolders.length + index
                                     return <File file={childFile} key={childFile.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={newIndex} setShowDetails={setShowDetails} />
                                 })}

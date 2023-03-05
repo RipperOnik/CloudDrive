@@ -103,6 +103,7 @@ export function useFolder(folderId = null, folder = null) {
         // get all the child folders of the current folder and of the current user
         const q = query(database.folders.collection, where("parentId", "==", folderId), where("userId", "==", currentUser.uid), orderBy("createdAt"))
 
+
         // You can listen to a document with the onSnapshot() method. 
         // An initial call using the callback you provide creates a document snapshot immediately with the current contents of the single document. Then, each time the contents change, another call updates the document snapshot.
         return onSnapshot(q, (snapshot) => {
@@ -118,6 +119,7 @@ export function useFolder(folderId = null, folder = null) {
     useEffect(() => {
         // get all the child folders of the current folder and of the current user
         const q = query(database.files.collection, where("folderId", "==", folderId), where("userId", "==", currentUser.uid), orderBy("createdAt"))
+
 
         // You can listen to a document with the onSnapshot() method. 
         // An initial call using the callback you provide creates a document snapshot immediately with the current contents of the single document. Then, each time the contents change, another call updates the document snapshot.

@@ -30,7 +30,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/search/:query" element={currentUser ? <SearchPage /> : <Navigate to="/login" />} />
+        <Route path="/search/:query" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
       </Routes>
 
 
