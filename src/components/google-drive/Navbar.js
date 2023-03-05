@@ -56,6 +56,7 @@ export default function NavbarComponent() {
 
     function handleSearch(e) {
         e.preventDefault()
+        initiateSearch()
     }
 
     function closeTooltip() {
@@ -98,24 +99,28 @@ export default function NavbarComponent() {
         // select the current item
         if (key === "Enter") {
             e.preventDefault()
-            target.current.blur()
-            if (activeIndex >= 0) {
-                const isFile = typeof elements[activeIndex].url !== 'undefined'
-                if (isFile) {
-                    window.open(elements[activeIndex].url, "_blank")
-                } else {
-                    navigate(`/folder/${elements[activeIndex].id}`)
-                }
-            } else {
-                // go to search dashboard
-                if (text.length > 0) {
-                    navigate(`/search/${text}`)
-                }
-            }
-            closeTooltip()
+            initiateSearch()
         }
-
     }
+    function initiateSearch() {
+        target.current.blur()
+        if (activeIndex >= 0) {
+            const isFile = typeof elements[activeIndex].url !== 'undefined'
+            if (isFile) {
+                window.open(elements[activeIndex].url, "_blank")
+            } else {
+                navigate(`/folder/${elements[activeIndex].id}`)
+            }
+        } else {
+            // go to search dashboard
+            if (text.length > 0) {
+                navigate(`/search/${text}`)
+            }
+        }
+        closeTooltip()
+    }
+
+
 
     return (
         <Navbar bg="white" expand="sm">
