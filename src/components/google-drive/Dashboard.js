@@ -32,7 +32,7 @@ export default function Dashboard() {
 
 
     const folders = isSearch ? (allFolders && allFolders.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))) : childFolders
-    const files = allFiles && isSearch ? (allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))) : childFiles
+    const files = isSearch ? (allFiles && allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))) : childFiles
 
 
     const [activeIndex, setActiveIndex] = useState(-1)
