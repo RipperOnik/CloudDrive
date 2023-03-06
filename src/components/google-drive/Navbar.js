@@ -133,7 +133,7 @@ export default function NavbarComponent({ resetActiveIndex, currentFolder }) {
         <Navbar bg="white" expand="sm" style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)" }}>
             <Container fluid>
                 <Stack direction='horizontal' className='flex-grow-1'>
-                    <Navbar.Brand className='d-flex align-items-center' style={{ gap: "10px", cursor: "pointer", marginRight: "158px" }} onClick={goHome}>
+                    <Navbar.Brand className='d-flex align-items-center' style={{ gap: "10px", cursor: "pointer" }} onClick={goHome}>
                         <img src="./images/cloud.svg" alt="logo" width={40} height={40} />
                         Drive
                     </Navbar.Brand>

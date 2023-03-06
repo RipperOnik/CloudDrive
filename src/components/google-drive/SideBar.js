@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Collapse, Container, Stack } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { faFolder } from '@fortawesome/free-regular-svg-icons'
+import { faFolder, faHeart } from '@fortawesome/free-regular-svg-icons'
 import { v4 as uuidV4 } from 'uuid'
 import { ROOT_FOLDER } from '../../hooks/useFolder'
 import { useNavigate } from 'react-router-dom'
@@ -39,6 +39,7 @@ export default function SideBar({ folders, resetActiveIndex }) {
         return (
             <Container className='sidebar'>
                 {getAllFolders(ROOT_FOLDER)}
+                <Collapsable icon={faHeart} name={"Favorite"} />
             </Container>
         )
     }
@@ -61,11 +62,15 @@ function Collapsable({ icon, name, children, onClick }) {
         onClick()
     }
     return (<>
-        <Stack direction='horizontal' gap={2} onClick={open} className="collapsable text-truncate">
-            {children && <FontAwesomeIcon icon={isOpen ? faChevronDown : faChevronRight} size="xs" onClick={toggle} aria-expanded={isOpen} aria-controls={id} className="chevron" />}
-            {isSvg ? <img src={`./images/${icon}.svg`} alt="icon" style={{ width: "20px" }} /> : <FontAwesomeIcon icon={icon} style={{ width: "20px" }} />}
-            <span className='text-truncate'>{name}</span>
-        </Stack>
+        <div className='collapsable'>
+            <Stack direction='horizontal' gap={2} onClick={open} className="text-truncate">
+                {children && <FontAwesomeIcon icon={isOpen ? faChevronDown : faChevronRight} size="xs" onClick={toggle} aria-expanded={isOpen} aria-controls={id} className="chevron" />}
+                {isSvg ? <img src={`./images/${icon}.svg`} alt="icon" style={{ width: "20px" }} /> : <FontAwesomeIcon icon={icon} style={{ width: "20px" }} />}
+                <span className='text-truncate'>{name}</span>
+            </Stack>
+
+        </div>
+
         <Collapse in={isOpen}>
             <div id={id} style={{ paddingLeft: "15px" }}>
                 {children}
