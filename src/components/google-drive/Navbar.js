@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Navbar, Nav, Container } from 'react-bootstrap'
+import { Navbar, Nav, Container, Stack } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import "../../styles/search.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -130,26 +130,30 @@ export default function NavbarComponent({ resetActiveIndex, currentFolder }) {
 
 
     return (
-        <Navbar bg="white" expand="sm">
+        <Navbar bg="white" expand="sm" style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)" }}>
             <Container fluid>
-                <Navbar.Brand className='d-flex align-items-center' style={{ gap: "10px", cursor: "pointer" }} onClick={goHome}>
-                    <img src="./images/cloud.svg" alt="logo" width={40} height={40} />
-                    Drive
-                </Navbar.Brand>
-                <form className='form-search' onSubmit={handleSearch}>
-                    <SearchTooltip
-                        show={show}
-                        width={target.current ? target.current.offsetWidth : 0}
-                        target={<input type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text} onClick={() => setShow(true)} onBlur={onHideSearchTooltip} onKeyDown={handleKeyDown} />}>
-                        {elements && elements.slice(0, 7).map((element, index) => {
-                            return <SearchResult element={element} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} key={element.id} />
-                        })}
-                    </SearchTooltip>
+                <Stack direction='horizontal' className='flex-grow-1'>
+                    <Navbar.Brand className='d-flex align-items-center' style={{ gap: "10px", cursor: "pointer", marginRight: "158px" }} onClick={goHome}>
+                        <img src="./images/cloud.svg" alt="logo" width={40} height={40} />
+                        Drive
+                    </Navbar.Brand>
+                    <form className='form-search' onSubmit={handleSearch}>
+                        <SearchTooltip
+                            show={show}
+                            width={target.current ? target.current.offsetWidth : 0}
+                            target={<input type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text} onClick={() => setShow(true)} onBlur={onHideSearchTooltip} onKeyDown={handleKeyDown} />}>
+                            {elements && elements.slice(0, 7).map((element, index) => {
+                                return <SearchResult element={element} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} key={element.id} />
+                            })}
+                        </SearchTooltip>
 
-                    <button type='submit' className='button-search'>
-                        <FontAwesomeIcon icon={faMagnifyingGlass} size="sm" style={{ color: "grey" }} />
-                    </button>
-                </form>
+                        <button type='submit' className='button-search'>
+                            <FontAwesomeIcon icon={faMagnifyingGlass} size="sm" style={{ color: "grey" }} />
+                        </button>
+                    </form>
+
+                </Stack>
+
 
                 <Nav>
                     <Nav.Link as={Link} to="/user">

@@ -7,3 +7,7 @@
 .circular-button:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+body {
+  min-height: 100vh;
+}
