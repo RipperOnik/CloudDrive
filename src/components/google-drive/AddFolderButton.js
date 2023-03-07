@@ -32,7 +32,8 @@ export default function AddFolderButton({ currentFolder }) {
             parentId: currentFolder.id,
             userId: currentUser.uid,
             path: path,
-            createdAt: new Date().toString()
+            createdAt: new Date().toString(),
+            isFavorite: false
         })
         setName("")
         closeModal()

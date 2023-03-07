@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Overlay, Popover, ButtonGroup } from 'react-bootstrap'
+import { Overlay, Popover } from 'react-bootstrap'
 import ActionButton from './ActionButton'
-import { faTrashCan, faEdit, faCircleQuestion } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faCircleQuestion, faHeart } from "@fortawesome/free-regular-svg-icons"
+import { faHeartBroken } from '@fortawesome/free-solid-svg-icons'
 import { database } from '../../firebase'
 import { useAuth } from '../../contexts/AuthContext'
 import RenameModal from './RenameModal'
@@ -60,6 +61,17 @@ export default function Folder({ folder, index, activeIndex, setActiveIndex, set
         setActiveIndex(index)
         closePopover()
     }
+    function toggleFav() {
+        database.folders.toggleFav(folder.id, folder.isFavorite)
+    }
+
+    useEffect(() => {
+        document.body.addEventListener('click', closePopover)
+        return () => {
+            document.body.removeEventListener('click', closePopover)
+        }
+    }, [])
+
     return (
         <>
             <div onClick={handleClick}
@@ -68,18 +80,19 @@ export default function Folder({ folder, index, activeIndex, setActiveIndex, set
                 <span className='text-truncate'>{folder.name}</span>
             </div>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
-                <Popover className="popover-shadow">
-                    <ButtonGroup vertical>
-                        <ActionButton icon={faTrashCan} onClick={handleRemove}>
-                            Remove
-                        </ActionButton>
-                        <ActionButton icon={faEdit} onClick={openRenameModal}>
-                            Rename
-                        </ActionButton>
-                        <ActionButton icon={faCircleQuestion} onClick={openDetails}>
-                            Show details
-                        </ActionButton>
-                    </ButtonGroup>
+                <Popover>
+                    <ActionButton icon={faTrashCan} onClick={handleRemove}>
+                        Remove
+                    </ActionButton>
+                    <ActionButton icon={faEdit} onClick={openRenameModal}>
+                        Rename
+                    </ActionButton>
+                    {/* <ActionButton icon={faCircleQuestion} onClick={openDetails}>
+                        Show details
+                    </ActionButton> */}
+                    <ActionButton icon={folder.isFavorite ? faHeartBroken : faHeart} onClick={toggleFav}>
+                        {folder.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                    </ActionButton>
                 </Popover>
             </Overlay>
             <RenameModal show={showModal} closeModal={closeModal} onSubmit={handleRename} defaultValue={folder.name} inputRef={inputRef} />

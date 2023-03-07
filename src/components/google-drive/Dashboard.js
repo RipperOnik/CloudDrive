@@ -10,7 +10,8 @@ import AddFileButton from './AddFileButton'
 import File from './File'
 import Details from './Details'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan, faEdit, faCircleQuestion } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faCircleQuestion, faHeart } from "@fortawesome/free-regular-svg-icons"
+import { faHeartBroken } from '@fortawesome/free-solid-svg-icons'
 import "../../styles/dashboard.css"
 import { database, storageManager } from '../../firebase'
 import RenameModal from "./RenameModal"
@@ -25,15 +26,26 @@ export default function Dashboard() {
 
     const { currentUser } = useAuth()
     const { query } = useParams()
-    const isSearch = typeof query !== 'undefined'
 
+
+    const isSearch = typeof query !== 'undefined'
+    const isFavorites = window.location.href.includes("favorites")
 
 
     const { folder, childFolders, childFiles, allFolders, allFiles } = useFolder(folderId, state && state.folder)
 
 
-    const folders = isSearch ? (allFolders && allFolders.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))) : childFolders
-    const files = isSearch ? (allFiles && allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))) : childFiles
+    let folders = childFolders
+    let files = childFiles
+    if (isFavorites) {
+        folders = allFolders.filter(f => f.isFavorite)
+        files = allFiles.filter(f => f.isFavorite)
+    } else if (isSearch) {
+        folders = allFolders.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))
+        files = allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))
+    }
+
+
 
 
     const [activeIndex, setActiveIndex] = useState(-1)
@@ -74,7 +86,8 @@ export default function Dashboard() {
             handleRemoveFolder()
         }
     }
-    function toggleDetails() {
+    function toggleDetails(e) {
+        e.stopPropagation()
         setShowDetails(prev => !prev)
     }
     function resetActiveIndex() {
@@ -91,6 +104,17 @@ export default function Dashboard() {
         }
     }, [])
 
+    function toggleFavFile(e) {
+        e.stopPropagation()
+        const file = elements[activeIndex]
+        database.files.toggleFav(file.id, file.isFavorite)
+    }
+    function toggleFavFolder(e) {
+        e.stopPropagation()
+        const folder = elements[activeIndex]
+        database.folders.toggleFav(folder.id, folder.isFavorite)
+    }
+
 
 
     return (
@@ -99,18 +123,21 @@ export default function Dashboard() {
             <div className='d-flex w-100' style={{ gap: "10px" }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
                 <div className='flex-grow-1' style={{ paddingRight: "15px" }}>
-                    <Stack direction='horizontal' gap={2} className={`align-items-center pb-2 pt-2 ${isSearch ? 'justify-content-between' : ''}`} style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
-                        {isSearch ? <div>Search results for {query}</div> : <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex} />}
+                    <Stack direction='horizontal' gap={2} className={`align-items-center pb-2 pt-2 ${(isSearch || isFavorites) ? 'justify-content-between' : ''}`} style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
+                        {isSearch && <div>Search results for {query}</div>}
+                        {isFavorites && "Favorites"}
+                        {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex} />}
                         {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 10px" }}>
                             <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                             <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={() => setShowModal(true)} />
                             <FontAwesomeIcon icon={faCircleQuestion} className="circular-button" onClick={toggleDetails} />
+                            <FontAwesomeIcon icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
                         </Stack>}
-                        {!isSearch && <AddFileButton currentFolder={folder} />}
-                        {!isSearch && <AddFolderButton currentFolder={folder} />}
+                        {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} />}
+                        {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} />}
                     </Stack>
                     <div className='d-flex' onClick={resetActiveIndex}>
-                        <div style={{ padding: "15px 15px 15px 0" }}>
+                        <div style={{ padding: "15px 15px 15px 0" }} className="flex-grow-1">
                             {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                             {folders && folders.length > 0 && (
                                 <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>

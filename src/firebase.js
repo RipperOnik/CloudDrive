@@ -88,6 +88,14 @@ export const database = {
             }
             updatePath(folderId, changedFolder)
         },
+        toggleFav: async (folderId, currentFav) => {
+            const folderRef = doc(collection(firestore, "folders"), folderId)
+            try {
+                await updateDoc(folderRef, { isFavorite: !currentFav })
+            } catch (e) {
+                console.error(e)
+            }
+        },
         collection: collection(firestore, "folders")
 
     },
@@ -111,6 +119,14 @@ export const database = {
             const fileRef = doc(collection(firestore, "files"), fileId)
             try {
                 await updateDoc(fileRef, changedFile)
+            } catch (e) {
+                console.error(e)
+            }
+        },
+        toggleFav: async (fileId, currentFav) => {
+            const fileRef = doc(collection(firestore, "files"), fileId)
+            try {
+                await updateDoc(fileRef, { isFavorite: !currentFav })
             } catch (e) {
                 console.error(e)
             }

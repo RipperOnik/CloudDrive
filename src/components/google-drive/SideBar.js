@@ -39,7 +39,7 @@ export default function SideBar({ folders, resetActiveIndex }) {
         return (
             <div className='sidebar flex-shrink-0'>
                 {getAllFolders(ROOT_FOLDER)}
-                <Collapsable icon={faHeart} name={"Favorite"} />
+                <Collapsable icon={faHeart} name={"Favorite"} onClick={() => navigate("/favorites")} />
             </div>
         )
     }

@@ -90,7 +90,8 @@ export default function AddFileButton({ currentFolder }) {
                                 userId: currentUser.uid,
                                 fileStoragePath: fullPath,
                                 type: fileType,
-                                size: file.size
+                                size: file.size,
+                                isFavorite: false
                             })
                         }
                     })

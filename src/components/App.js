@@ -6,7 +6,7 @@ import Login from "./authentication/Login";
 import ForgotPassword from "./authentication/ForgotPassword";
 import UpdateProfile from "./authentication/UpdateProfile";
 import Dashboard from "./google-drive/Dashboard";
-import SearchPage from "./google-drive/SearchPage";
+
 
 
 function App() {
@@ -31,6 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/search/:query" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/favorites" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
       </Routes>
 
 

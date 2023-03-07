@@ -1,6 +1,7 @@
-import React from 'react'
-import { faTrashCan, faEdit, faCircleQuestion, faSave } from "@fortawesome/free-regular-svg-icons"
-import { Overlay, Popover, ButtonGroup } from 'react-bootstrap'
+import React, { useEffect } from 'react'
+import { faTrashCan, faEdit, faCircleQuestion, faSave, faHeart } from "@fortawesome/free-regular-svg-icons"
+import { faHeartBroken } from '@fortawesome/free-solid-svg-icons'
+import { Overlay, Popover } from 'react-bootstrap'
 import { useState, useRef } from 'react'
 import "../../styles/popover.css"
 import { database, storageManager } from '../../firebase'
@@ -57,11 +58,22 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
         }
     }
     function openDetails(e) {
-        e.stopPropagation()
         setShowDetails(true)
-        setActiveIndex(index)
         closePopover()
+        setActiveIndex(index)
     }
+
+    function toggleFav() {
+        database.files.toggleFav(file.id, file.isFavorite)
+    }
+
+    useEffect(() => {
+        document.body.addEventListener('click', closePopover)
+        return () => {
+            document.body.removeEventListener('click', closePopover)
+        }
+    }, [])
+
 
 
     return (
@@ -76,21 +88,22 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
                 </div>
             </div>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
-                <Popover className="popover-shadow">
-                    <ButtonGroup vertical>
-                        <ActionButton icon={faTrashCan} onClick={handleRemove}>
-                            Remove
-                        </ActionButton>
-                        <ActionButton icon={faEdit} onClick={openRenameModal}>
-                            Rename
-                        </ActionButton>
-                        <ActionButton icon={faSave} onClick={handleDownload}>
-                            Download
-                        </ActionButton>
-                        <ActionButton icon={faCircleQuestion} onClick={openDetails}>
-                            Show details
-                        </ActionButton>
-                    </ButtonGroup>
+                <Popover>
+                    <ActionButton icon={faTrashCan} onClick={handleRemove}>
+                        Remove
+                    </ActionButton>
+                    <ActionButton icon={faEdit} onClick={openRenameModal}>
+                        Rename
+                    </ActionButton>
+                    <ActionButton icon={faSave} onClick={handleDownload}>
+                        Download
+                    </ActionButton>
+                    {/* <ActionButton icon={faCircleQuestion} onClick={openDetails}>
+                        Show details
+                    </ActionButton> */}
+                    <ActionButton icon={file.isFavorite ? faHeartBroken : faHeart} onClick={toggleFav}>
+                        {file.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                    </ActionButton>
                 </Popover>
             </Overlay>
             <RenameModal show={showModal} closeModal={closeModal} onSubmit={handleRename} defaultValue={file.name} inputRef={inputRef} />
