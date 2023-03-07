@@ -131,9 +131,9 @@ export default function NavbarComponent({ resetActiveIndex, currentFolder }) {
 
     return (
         <Navbar bg="white" expand="sm" style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)" }}>
-            <Container fluid>
+            <Stack direction='horizontal' className='w-100' style={{ padding: "0 15px" }}>
                 <Stack direction='horizontal' className='flex-grow-1'>
-                    <Navbar.Brand className='d-flex align-items-center' style={{ gap: "10px", cursor: "pointer" }} onClick={goHome}>
+                    <Navbar.Brand className='d-flex align-items-center' style={{ gap: "10px", cursor: "pointer", width: "235px" }} onClick={goHome}>
                         <img src="./images/cloud.svg" alt="logo" width={40} height={40} />
                         Drive
                     </Navbar.Brand>
@@ -156,11 +156,11 @@ export default function NavbarComponent({ resetActiveIndex, currentFolder }) {
 
 
                 <Nav>
-                    <Nav.Link as={Link} to="/user">
+                    <Nav.Link as={Link} to="/user" style={{ paddingRight: "0" }}>
                         Profile
                     </Nav.Link>
                 </Nav>
-            </Container>
+            </Stack>
         </Navbar>
     )
 

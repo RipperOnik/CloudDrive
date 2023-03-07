@@ -37,10 +37,10 @@ export default function SideBar({ folders, resetActiveIndex }) {
 
     if (folders) {
         return (
-            <Container className='sidebar'>
+            <div className='sidebar flex-shrink-0'>
                 {getAllFolders(ROOT_FOLDER)}
                 <Collapsable icon={faHeart} name={"Favorite"} />
-            </Container>
+            </div>
         )
     }
 
@@ -63,12 +63,11 @@ function Collapsable({ icon, name, children, onClick }) {
     }
     return (<>
         <div className='collapsable'>
-            <Stack direction='horizontal' gap={2} onClick={open} className="text-truncate">
+            <Stack direction='horizontal' gap={2} onClick={open}>
                 {children && <FontAwesomeIcon icon={isOpen ? faChevronDown : faChevronRight} size="xs" onClick={toggle} aria-expanded={isOpen} aria-controls={id} className="chevron" />}
                 {isSvg ? <img src={`./images/${icon}.svg`} alt="icon" style={{ width: "20px" }} /> : <FontAwesomeIcon icon={icon} style={{ width: "20px" }} />}
-                <span className='text-truncate'>{name}</span>
+                <div className='text-truncate'>{name}</div>
             </Stack>
-
         </div>
 
         <Collapse in={isOpen}>

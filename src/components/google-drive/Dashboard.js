@@ -96,10 +96,9 @@ export default function Dashboard() {
     return (
         <div>
             <Navbar resetActiveIndex={resetActiveIndex} currentFolder={folder} />
-            <div className='d-flex w-100'>
+            <div className='d-flex w-100' style={{ gap: "10px" }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
-
-                <Container fluid>
+                <div className='flex-grow-1' style={{ paddingRight: "15px" }}>
                     <Stack direction='horizontal' gap={2} className={`align-items-center pb-2 pt-2 ${isSearch ? 'justify-content-between' : ''}`} style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
                         {isSearch ? <div>Search results for {query}</div> : <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex} />}
                         {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 10px" }}>
@@ -109,10 +108,9 @@ export default function Dashboard() {
                         </Stack>}
                         {!isSearch && <AddFileButton currentFolder={folder} />}
                         {!isSearch && <AddFolderButton currentFolder={folder} />}
-
                     </Stack>
                     <div className='d-flex' onClick={resetActiveIndex}>
-                        <Container fluid style={{ padding: "15px 15px 15px 0" }}>
+                        <div style={{ padding: "15px 15px 15px 0" }}>
                             {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                             {folders && folders.length > 0 && (
                                 <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
@@ -131,10 +129,10 @@ export default function Dashboard() {
                                     })}
                                 </Stack>
                             )}
-                        </Container>
+                        </div>
                         {showDetails && <Details element={elements[activeIndex]} setShowDetails={setShowDetails} />}
                     </div>
-                </Container>
+                </div>
 
             </div>
             <RenameModal show={showModal} closeModal={() => setShowModal(false)} onSubmit={handleRename} defaultValue={elements[activeIndex] && elements[activeIndex].name} inputRef={inputRef} />
