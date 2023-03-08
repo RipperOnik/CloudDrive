@@ -168,7 +168,7 @@ export default function Dashboard() {
                     </Stack>
                     <div className='d-flex' onClick={resetActiveIndex}>
                         <div style={{ padding: "15px 15px 15px 0", position: "relative" }} className="flex-grow-1">
-                            <FilterDropdown style={{ position: "absolute", top: "10px", right: "10px" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
+                            <FilterDropdown style={{ position: "absolute", top: "5px", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
                             {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                             {folders && folders.length > 0 && (
                                 <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
