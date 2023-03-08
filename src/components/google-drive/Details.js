@@ -1,17 +1,15 @@
 import React from 'react'
 import { divideFileName } from './File'
 import "../../styles/detail.css"
-import { useFolder } from '../../hooks/useFolder'
 
 
 export default function Details({ element, setShowDetails }) {
 
-  const { allFolders, allFiles } = useFolder()
 
   if (element) {
     const [fileName, fileExtension] = divideFileName(element.name)
     const isFile = element.url
-    const size = isFile ? convertSize(element.size) : convertSize(calculateFolderSize(element.id, allFolders, allFiles))
+    const size = convertSize(element.size)
     const createdAt = defineDate(element.createdAt)
     return (
       <div className='details'>
@@ -84,23 +82,7 @@ function defineDate(dateStr) {
 }
 
 
-function calculateFolderSize(folderId, folders, files) {
-  if (folders && files) {
-    let sum = 0
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].folderId === folderId) {
-        sum += files[i].size
-      }
-    }
-    for (let i = 0; i < folders.length; i++) {
-      if (folders[i].parentId === folderId) {
-        sum += calculateFolderSize(folders[i].id, folders, files)
-      }
-    }
-    return sum
-  }
-  return 0
-}
+
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1)

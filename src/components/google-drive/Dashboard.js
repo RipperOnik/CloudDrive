@@ -17,6 +17,9 @@ import { database, storageManager } from '../../firebase'
 import RenameModal from "./RenameModal"
 import { useAuth } from '../../contexts/AuthContext'
 import SideBar from './SideBar'
+import FilterDropdown from './FilterDropdown'
+
+export const filters = { DATE: "date", NAME: "name", SIZE: "size" }
 
 
 export default function Dashboard() {
@@ -26,6 +29,9 @@ export default function Dashboard() {
 
     const { currentUser } = useAuth()
     const { query } = useParams()
+
+    const [chosenFilter, setChosenFilter] = useState(filters.DATE)
+    const [isASC, setIsASC] = useState(true)
 
 
     const isSearch = typeof query !== 'undefined'
@@ -44,7 +50,33 @@ export default function Dashboard() {
         folders = allFolders.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))
         files = allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))
     }
+    function sortFunc(a, b) {
+        if (chosenFilter === filters.DATE) {
+            if (isASC) {
+                return new Date(a.createdAt) - new Date(b.createdAt)
+            } else {
+                return new Date(b.createdAt) - new Date(a.createdAt)
+            }
+        }
+        else if (chosenFilter === filters.NAME) {
+            if (isASC) {
+                return a.name.localeCompare(b.name)
+            } else {
+                return b.name.localeCompare(a.name)
+            }
+        }
 
+        else if (chosenFilter === filters.SIZE) {
+            if (isASC) {
+                return a.size - b.size
+            } else {
+                return b.size - a.size
+            }
+        }
+    }
+
+    folders.sort(sortFunc)
+    files.sort(sortFunc)
 
 
 
@@ -93,14 +125,10 @@ export default function Dashboard() {
     function resetActiveIndex() {
         setActiveIndex(-1)
     }
-    function clickReset(e) {
-        e.stopPropagation()
-        resetActiveIndex()
-    }
     useEffect(() => {
-        document.body.addEventListener('click', clickReset)
+        document.body.addEventListener('click', resetActiveIndex)
         return () => {
-            document.body.removeEventListener('click', clickReset)
+            document.body.removeEventListener('click', resetActiveIndex)
         }
     }, [])
 
@@ -114,6 +142,8 @@ export default function Dashboard() {
         const folder = elements[activeIndex]
         database.folders.toggleFav(folder.id, folder.isFavorite)
     }
+
+
 
 
 
@@ -137,7 +167,8 @@ export default function Dashboard() {
                         {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} />}
                     </Stack>
                     <div className='d-flex' onClick={resetActiveIndex}>
-                        <div style={{ padding: "15px 15px 15px 0" }} className="flex-grow-1">
+                        <div style={{ padding: "15px 15px 15px 0", position: "relative" }} className="flex-grow-1">
+                            <FilterDropdown style={{ position: "absolute", top: "10px", right: "10px" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
                             {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                             {folders && folders.length > 0 && (
                                 <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>

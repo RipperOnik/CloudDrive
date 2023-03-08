@@ -1,8 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { database } from "../firebase";
-import { where, query, orderBy, onSnapshot } from "firebase/firestore";
+import { where, query, orderBy, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "../contexts/AuthContext";
-
 
 const ACTIONS = {
     SELECT_FOLDER: 'select-folder',
@@ -159,6 +158,40 @@ export function useFolder(folderId = null, folder = null) {
     }, [currentUser])
 
 
+    // update folder sizes
+    useEffect(() => {
+        async function updateSize() {
+            for (let i = 0; i < state.allFolders.length; i++) {
+                const folder = state.allFolders[i]
+                const newSize = calculateFolderSize(folder.id, state.allFolders, state.allFiles)
+                if (newSize === folder.size) {
+                    break
+                }
+                const folderRef = doc(database.folders.collection, folder.id)
+                await updateDoc(folderRef, { size: newSize })
+            }
+        }
+        updateSize()
+
+    }, [state.allFiles])
+
+    function calculateFolderSize(folderId, folders, files) {
+        if (folders && files) {
+            let sum = 0
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].folderId === folderId) {
+                    sum += files[i].size
+                }
+            }
+            for (let i = 0; i < folders.length; i++) {
+                if (folders[i].parentId === folderId) {
+                    sum += calculateFolderSize(folders[i].id, folders, files)
+                }
+            }
+            return sum
+        }
+        return 0
+    }
 
 
 
