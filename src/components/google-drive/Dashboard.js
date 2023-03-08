@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Navbar from './Navbar'
-import { Container, Stack } from 'react-bootstrap'
+import { Stack } from 'react-bootstrap'
 import AddFolderButton from './AddFolderButton'
 import { useFolder } from '../../hooks/useFolder'
 import Folder from './Folder'
