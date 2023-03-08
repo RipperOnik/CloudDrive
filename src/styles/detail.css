@@ -5,6 +5,8 @@
   gap: 20px;
   height: 100vh;
   flex-direction: column;
+  overflow: hidden;
+  transition: width 0.2s ease-in-out;
 }
 
 .details-header {

@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { divideFileName } from './File'
 import "../../styles/detail.css"
 
 
-export default function Details({ element, setShowDetails }) {
+export default function Details({ element, setShowDetails, showDetails }) {
+  const ref = useRef(null)
+  const [width, setWidth] = useState(0)
 
+  useEffect(() => {
+    if (showDetails) {
+      setWidth(ref.current.getBoundingClientRect().height)
+    } else {
+      setWidth(0)
+    }
+  }, [showDetails])
 
   if (element) {
     const [fileName, fileExtension] = divideFileName(element.name)
@@ -12,24 +21,42 @@ export default function Details({ element, setShowDetails }) {
     const size = convertSize(element.size)
     const createdAt = defineDate(element.createdAt)
     return (
-      <div className='details'>
-        <div className='details-header'>
-          <a href={element.url} target="_blank" className='details-file text-truncate d-flex align-items-center' style={{ gap: "8px", width: "200px" }}>
-            <img src={isFile ? `./images/${element.type}.svg` : "./images/folder.svg"} alt="file" style={{ width: "35px" }} onError={(e) => e.target.src = "./images/file.svg"} />
-            <div className='d-flex flex-grow-1 text-truncate'>
-              <div className='text-truncate'>{isFile ? fileName : element.name}</div>
-              {isFile && <span>{fileExtension}</span>}
-            </div>
-          </a>
-          <button type='button' className='btn-close' style={{ width: "2px" }} onClick={() => setShowDetails(false)} />
-        </div>
-        <div className='details-body'>
-          <Detail name="Size" value={size} />
-          <Detail name="Type" value={capitalize(isFile ? element.type : "folder")} />
-          <Detail name="Created" value={createdAt} />
+      <div className='details' style={{ width: width, padding: showDetails ? '15px' : '0' }}>
+        <div ref={ref}>
+          <div className='details-header'>
+            <a href={element.url} target="_blank" className='details-file text-truncate d-flex align-items-center' style={{ gap: "8px", width: "200px" }}>
+              <img src={isFile ? `./images/${element.type}.svg` : "./images/folder.svg"} alt="file" style={{ width: "35px" }} onError={(e) => e.target.src = "./images/file.svg"} />
+              <div className='d-flex flex-grow-1 text-truncate'>
+                <div className='text-truncate'>{isFile ? fileName : element.name}</div>
+                {isFile && <span>{fileExtension}</span>}
+              </div>
+            </a>
+            <button type='button' className='btn-close' style={{ width: "2px" }} onClick={() => setShowDetails(false)} />
+          </div>
+          <div className='details-body'>
+            <Detail name="Size" value={size} />
+            <Detail name="Type" value={capitalize(isFile ? element.type : "folder")} />
+            <Detail name="Created" value={createdAt} />
+          </div>
         </div>
       </div>
     )
+  } else {
+    return (
+      <div className='details' style={{ width: width, padding: showDetails ? '15px' : '0' }}>
+        <div ref={ref}>
+          <div className='details-header justify-content-end'>
+            <button type='button' className='btn-close' style={{ width: "2px" }} onClick={() => setShowDetails(false)} />
+          </div>
+          <div className='details-body'>
+            <div className='text-muted'>Select a file or folder to view its details</div>
+            <img src="./images/unchosen_folder.svg" alt="unchosen folder" />
+          </div>
+        </div>
+      </div>
+    )
+
+
   }
 
 

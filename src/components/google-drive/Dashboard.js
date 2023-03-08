@@ -157,10 +157,10 @@ export default function Dashboard() {
                         {isSearch && <div>Search results for {query}</div>}
                         {isFavorites && "Favorites"}
                         {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex} />}
+                        <FontAwesomeIcon icon={faCircleQuestion} className="circular-button" onClick={toggleDetails} />
                         {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 10px" }}>
                             <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                             <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={() => setShowModal(true)} />
-                            <FontAwesomeIcon icon={faCircleQuestion} className="circular-button" onClick={toggleDetails} />
                             <FontAwesomeIcon icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
                         </Stack>}
                         {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} />}
@@ -188,7 +188,7 @@ export default function Dashboard() {
                                 </Stack>
                             )}
                         </div>
-                        {showDetails && <Details element={elements[activeIndex]} setShowDetails={setShowDetails} />}
+                        {<Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />}
                     </div>
                 </div>
 
