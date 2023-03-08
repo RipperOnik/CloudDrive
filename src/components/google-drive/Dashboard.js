@@ -86,6 +86,7 @@ export default function Dashboard() {
 
     const [showModal, setShowModal] = useState(false)
     const inputRef = useRef(null)
+    const elementToRename = useRef(null)
 
 
     function handleRemoveFile() {
@@ -99,14 +100,15 @@ export default function Dashboard() {
     function handleRename(e) {
         e.preventDefault()
         setShowModal(false)
-        if (elements[activeIndex].url) {
-            if (elements[activeIndex].name !== inputRef.current.value) {
-                database.files.update(elements[activeIndex].id, { name: inputRef.current.value })
+        const element = elementToRename.current
+        if (element.url) {
+            if (element.name !== inputRef.current.value) {
+                database.files.update(element.id, { name: inputRef.current.value })
             }
         }
         else {
-            if (elements[activeIndex].name !== inputRef.current.value) {
-                database.folders.update(elements[activeIndex].id, { name: inputRef.current.value }, currentUser)
+            if (element.name !== inputRef.current.value) {
+                database.folders.update(element.id, { name: inputRef.current.value }, currentUser)
             }
         }
 
@@ -142,6 +144,12 @@ export default function Dashboard() {
         const folder = elements[activeIndex]
         database.folders.toggleFav(folder.id, folder.isFavorite)
     }
+    function handleEdit(e) {
+        e.stopPropagation()
+        elementToRename.current = elements[activeIndex]
+        setShowModal(true)
+    }
+
 
 
 
@@ -153,14 +161,14 @@ export default function Dashboard() {
             <div className='d-flex w-100' style={{ gap: "10px" }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
                 <div className='flex-grow-1' style={{ paddingRight: "15px" }}>
-                    <Stack direction='horizontal' gap={2} className={`align-items-center pb-2 pt-2 ${(isSearch || isFavorites) ? 'justify-content-between' : ''}`} style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
-                        {isSearch && <div>Search results for {query}</div>}
-                        {isFavorites && "Favorites"}
+                    <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
+                        {isSearch && <div className='flex-grow-1'>Search results for {query}</div>}
+                        {isFavorites && <div className='flex-grow-1'>Favorites</div>}
                         {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex} />}
                         <FontAwesomeIcon icon={faCircleQuestion} className="circular-button" onClick={toggleDetails} />
                         {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 10px" }}>
                             <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
-                            <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={() => setShowModal(true)} />
+                            <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={handleEdit} />
                             <FontAwesomeIcon icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
                         </Stack>}
                         {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} />}
@@ -182,7 +190,7 @@ export default function Dashboard() {
                             {files && files.length > 0 && (
                                 <Stack direction="horizontal" className='flex-wrap' gap={3}>
                                     {files.map((childFile, index) => {
-                                        const newIndex = childFolders.length + index
+                                        const newIndex = folders.length + index
                                         return <File file={childFile} key={childFile.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={newIndex} setShowDetails={setShowDetails} />
                                     })}
                                 </Stack>
