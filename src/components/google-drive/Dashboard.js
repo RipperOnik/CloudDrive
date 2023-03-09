@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import Navbar from './Navbar'
 import { Stack } from 'react-bootstrap'
 import AddFolderButton from './AddFolderButton'
@@ -153,6 +153,23 @@ export default function Dashboard() {
 
 
 
+    const [mainWidth, setMainWidth] = useState(0)
+
+    const myObserver = useMemo(() => new ResizeObserver(entries => {
+        // this will get called whenever div dimension changes
+        entries.forEach(entry => {
+            setMainWidth(entry.contentRect.width)
+        });
+    }), [])
+    const mainRef = useRef(null)
+
+    useEffect(() => {
+        myObserver.observe(mainRef.current)
+        return () => myObserver.disconnect()
+    }, [myObserver])
+
+
+
 
 
 
@@ -176,7 +193,7 @@ export default function Dashboard() {
                         {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} />}
                     </Stack>
                     <div className='d-flex' onClick={resetActiveIndex}>
-                        <div style={{ padding: "15px 15px 15px 0", position: "relative" }} className="flex-grow-1">
+                        <div style={{ padding: "15px 15px 15px 0", position: "relative" }} className="flex-grow-1" ref={mainRef}>
                             <FilterDropdown style={{ position: "absolute", top: "5px", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
                             {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                             {folders && folders.length > 0 && (
@@ -196,7 +213,7 @@ export default function Dashboard() {
                                     })}
                                 </Stack>
                             )}
-                            {elements[activeIndex] && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex} style={{ position: "fixed", bottom: "0" }} />}
+                            {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex} style={{ position: "fixed", bottom: "0", width: mainWidth, borderTop: "1px solid rgba(0, 0, 0, 0.2)" }} />}
                         </div>
                         {<Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />}
                     </div>
