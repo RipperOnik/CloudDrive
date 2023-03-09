@@ -25,7 +25,7 @@ export default function Details({ element, setShowDetails, showDetails }) {
             <img src={isFile ? `./images/${element.type}.svg` : "./images/folder.svg"} alt="file" style={{ width: "35px" }} onError={(e) => e.target.src = "./images/file.svg"} />
             {element.name}
           </a>
-          {showDetails && <button type='button' className='btn-close' style={{ width: "2px", position: "absolute", right: "7px", top: "7px" }} onClick={() => setShowDetails(false)} />}
+          {showDetails && <button type='button' className='btn-close' style={{ width: "2px", position: "absolute", right: "5px", top: "5px" }} onClick={() => setShowDetails(false)} />}
           <div className='details-body'>
             <Detail name="Size" value={size} />
             <Detail name="Type" value={capitalize(isFile ? element.type : "folder")} />
@@ -38,9 +38,7 @@ export default function Details({ element, setShowDetails, showDetails }) {
     return (
       <div className='details' style={{ width: width, padding: showDetails ? '15px' : '0' }}>
         <div ref={ref}>
-          <div className='details-header justify-content-end'>
-            {showDetails && <button type='button' className='btn-close' style={{ width: "2px" }} onClick={() => setShowDetails(false)} />}
-          </div>
+          {showDetails && <button type='button' className='btn-close' style={{ width: "2px", position: "absolute", right: "5px", top: "5px" }} onClick={() => setShowDetails(false)} />}
           <div className='details-body'>
             <div className='text-muted'>Select a file or folder to view its details</div>
             <img src="./images/view.svg" alt="view" />
