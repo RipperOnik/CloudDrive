@@ -21,6 +21,8 @@ function App() {
         {/* Drive */}
         <Route path="/" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/folder/:folderId" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/search/:query" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/favorites" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
 
 
         {/* Profile */}
@@ -30,8 +32,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/search/:query" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/favorites" element={currentUser ? <Dashboard /> : <Navigate to="/login" />} />
+
       </Routes>
 
 

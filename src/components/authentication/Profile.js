@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Alert } from 'react-bootstrap'
+import { Card, Alert, Stack } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
 import CenteredContainer from './CenteredContainer'
@@ -31,9 +31,10 @@ export default function Profile() {
                 </Card.Body>
 
             </Card>
-            <div className='w-100 text-center mt-2'>
+            <Stack className='w-100 text-center mt-2 justify-content-center' gap={4} direction="horizontal">
                 <Link onClick={handleLogout}>Log out</Link>
-            </div>
+                <Link to='/'>Dashboard</Link>
+            </Stack>
         </CenteredContainer>
     )
 }
