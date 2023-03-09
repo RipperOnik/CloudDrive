@@ -213,7 +213,8 @@ export default function Dashboard() {
                                     })}
                                 </Stack>
                             )}
-                            {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex} style={{ position: "fixed", bottom: "0", width: mainWidth, borderTop: "1px solid rgba(0, 0, 0, 0.2)" }} />}
+                            {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
+                                style={{ position: "fixed", bottom: "0", width: mainWidth, borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
                         </div>
                         {<Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />}
                     </div>
