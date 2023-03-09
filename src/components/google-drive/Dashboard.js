@@ -18,6 +18,7 @@ import RenameModal from "./RenameModal"
 import { useAuth } from '../../contexts/AuthContext'
 import SideBar from './SideBar'
 import FilterDropdown from './FilterDropdown'
+import ElementBreadcrumbs from './ElementBreadcrumbs'
 
 export const filters = { DATE: "date", NAME: "name", SIZE: "size" }
 
@@ -195,6 +196,7 @@ export default function Dashboard() {
                                     })}
                                 </Stack>
                             )}
+                            {elements[activeIndex] && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex} style={{ position: "fixed", bottom: "0" }} />}
                         </div>
                         {<Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />}
                     </div>

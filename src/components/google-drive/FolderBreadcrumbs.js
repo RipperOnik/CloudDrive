@@ -37,3 +37,5 @@ export default function FolderBreadcrumbs({ currentFolder, resetActiveIndex }) {
         </Breadcrumb>
     )
 }
+
+
