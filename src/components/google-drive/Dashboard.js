@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import Navbar from './Navbar'
-import { Stack } from 'react-bootstrap'
+import { Offcanvas, Stack } from 'react-bootstrap'
 import AddFolderButton from './AddFolderButton'
 import { useFolder } from '../../hooks/useFolder'
 import Folder from './Folder'
@@ -10,7 +10,7 @@ import AddFileButton from './AddFileButton'
 import File from './File'
 import Details from './Details'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan, faEdit, faCircleQuestion, faHeart } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faCircleQuestion, faHeart, faSave } from "@fortawesome/free-regular-svg-icons"
 import { faHeartBroken } from '@fortawesome/free-solid-svg-icons'
 import "../../styles/dashboard.css"
 import { database, storageManager } from '../../firebase'
@@ -19,6 +19,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import SideBar from './SideBar'
 import FilterDropdown from './FilterDropdown'
 import ElementBreadcrumbs from './ElementBreadcrumbs'
+import DetailsMobile from './DetailsMobile'
 
 export const filters = { DATE: "date", NAME: "name", SIZE: "size" }
 
@@ -129,9 +130,10 @@ export default function Dashboard() {
         setActiveIndex(-1)
     }
     useEffect(() => {
-        document.body.addEventListener('click', resetActiveIndex)
+        const resetClickElement = mainRef.current
+        resetClickElement.addEventListener('click', resetActiveIndex)
         return () => {
-            document.body.removeEventListener('click', resetActiveIndex)
+            resetClickElement.removeEventListener('click', resetActiveIndex)
         }
     }, [])
 
@@ -168,32 +170,48 @@ export default function Dashboard() {
         return () => myObserver.disconnect()
     }, [myObserver])
 
+    function handleDownload() {
+        storageManager.download(elements[activeIndex].url, elements[activeIndex].name)
+    }
+
+    const [showDetailsMobile, setShowDetailsMobile] = useState(false)
+
+    function openDetailsMobile(e) {
+        e.stopPropagation()
+        setShowDetailsMobile(true)
+    }
+
+
+
+
 
 
 
 
 
     return (
-        <div>
-            <Navbar resetActiveIndex={resetActiveIndex} currentFolder={folder} />
-            <div className='d-flex w-100' style={{ gap: "10px" }}>
+        <div style={{ height: '100vh' }}>
+            <Navbar resetActiveIndex={resetActiveIndex} />
+            <div className='d-flex w-100 h-100' style={{ gap: "10px" }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
                 <div className='flex-grow-1' style={{ paddingRight: "15px" }}>
-                    <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", height: "65px" }}>
+                    <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", minHeight: "65px", paddingLeft: "15px" }}>
                         {isSearch && <div className='flex-grow-1'>Search results for {query}</div>}
                         {isFavorites && <div className='flex-grow-1'>Favorites</div>}
-                        {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex} />}
-                        <FontAwesomeIcon icon={faCircleQuestion} className="circular-button" onClick={toggleDetails} />
+                        {!isFavorites && !isSearch && <div className='flex-grow-1 flex-shrink-1'>Drive</div>}
+                        <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} />
                         {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 10px" }}>
                             <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                             <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={handleEdit} />
+                            {elements[activeIndex].url && <FontAwesomeIcon icon={faSave} className="circular-button" onClick={handleDownload} />}
                             <FontAwesomeIcon icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
+                            <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-md-none" onClick={openDetailsMobile} />
                         </Stack>}
                         {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} />}
                         {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} />}
                     </Stack>
-                    <div className='d-flex' onClick={resetActiveIndex}>
-                        <div style={{ padding: "15px 15px 15px 0", position: "relative" }} className="flex-grow-1" ref={mainRef}>
+                    <div className='d-flex h-100' onClick={resetActiveIndex}>
+                        <div style={{ padding: "15px", position: "relative" }} className="flex-grow-1" ref={mainRef}>
                             <FilterDropdown style={{ position: "absolute", top: "5px", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
                             {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                             {folders && folders.length > 0 && (
@@ -215,13 +233,23 @@ export default function Dashboard() {
                             )}
                             {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
                                 style={{ position: "fixed", bottom: "0", width: mainWidth, borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
+                            {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex}
+                                style={{ position: "fixed", bottom: "0", width: mainWidth, borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
                         </div>
-                        {<Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />}
+                        <Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />
                     </div>
                 </div>
 
             </div>
             <RenameModal show={showModal} closeModal={() => setShowModal(false)} onSubmit={handleRename} defaultValue={elements[activeIndex] && elements[activeIndex].name} inputRef={inputRef} />
+            <Offcanvas show={showDetailsMobile} onHide={() => setShowDetailsMobile(false)} placement='end'>
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Details</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                    <DetailsMobile element={elements[activeIndex]} />
+                </Offcanvas.Body>
+            </Offcanvas>
         </div>
 
     )

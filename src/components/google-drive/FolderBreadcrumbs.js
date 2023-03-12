@@ -3,13 +3,13 @@ import { Breadcrumb } from 'react-bootstrap'
 import { ROOT_FOLDER } from '../../hooks/useFolder'
 import { Link } from 'react-router-dom'
 
-export default function FolderBreadcrumbs({ currentFolder, resetActiveIndex }) {
+export default function FolderBreadcrumbs({ currentFolder, resetActiveIndex, style }) {
     let path = currentFolder === ROOT_FOLDER ? [] : [ROOT_FOLDER]
     if (currentFolder) {
         path = [...path, ...currentFolder.path]
     }
     return (
-        <Breadcrumb listProps={{ className: "pl-0 m-0" }} className="flex-grow-1">
+        <Breadcrumb listProps={{ className: "pl-0 m-0" }} className="flex-grow-1" style={style}>
             {path.map((folder, index) => {
                 return <Breadcrumb.Item
                     onClick={resetActiveIndex}

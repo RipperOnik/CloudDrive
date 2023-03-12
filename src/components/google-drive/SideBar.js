@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Collapse, Container, Stack } from 'react-bootstrap'
+import { Collapse, Stack } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { faFolder, faHeart } from '@fortawesome/free-regular-svg-icons'
@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import "../../styles/sidebar.css"
 
 
-export default function SideBar({ folders, resetActiveIndex }) {
+export default function SideBar({ folders, resetActiveIndex, isMobile = false, onHide }) {
     const navigate = useNavigate()
     function getAllFolders(folder) {
         if (folders) {
@@ -21,10 +21,18 @@ export default function SideBar({ folders, resetActiveIndex }) {
                 if (isRoot) {
                     navigate('/')
                     resetActiveIndex()
+                    if (isMobile) {
+                        onHide()
+                    }
+
+
 
                 } else {
                     navigate(`/folder/${folder.id}`, { state: { folder: folder } })
                     resetActiveIndex()
+                    if (isMobile) {
+                        onHide()
+                    }
                 }
 
             }
@@ -37,9 +45,14 @@ export default function SideBar({ folders, resetActiveIndex }) {
 
     if (folders) {
         return (
-            <div className='sidebar flex-shrink-0'>
+            <div className={`sidebar flex-shrink-0 ${!isMobile ? 'd-none d-md-block' : 'p-0'}`}>
                 {getAllFolders(ROOT_FOLDER)}
-                <Collapsable icon={faHeart} name={"Favorite"} onClick={() => navigate("/favorites")} />
+                <Collapsable icon={faHeart} name={"Favorite"} onClick={() => {
+                    navigate("/favorites")
+                    if (isMobile) {
+                        onHide()
+                    }
+                }} />
             </div>
         )
     }
