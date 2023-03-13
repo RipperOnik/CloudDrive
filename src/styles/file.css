@@ -5,6 +5,9 @@
   text-decoration: none;
   color: black;
   background-color: white;
+  width: 200px;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .file:hover {
@@ -14,4 +17,10 @@
 .file--active {
   border: 1px solid blue;
   background-color: rgb(227, 234, 247) !important;
+}
+
+@media screen and (max-width: 768px) {
+  .file {
+    width: 150px;
+  }
 }

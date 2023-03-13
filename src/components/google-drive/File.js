@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { faTrashCan, faEdit, faCircleQuestion, faSave, faHeart } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faSave, faHeart } from "@fortawesome/free-regular-svg-icons"
 import { faHeartBroken } from '@fortawesome/free-solid-svg-icons'
 import { Overlay, Popover } from 'react-bootstrap'
 import { useState, useRef } from 'react'
@@ -79,7 +79,7 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
     return (
         <>
             <div className={`file text-truncate d-flex align-items-center ${isActive ? "file--active" : ''}`} onContextMenu={handleRightClick} ref={target}
-                style={{ gap: "8px", width: "200px", cursor: "pointer", display: "inline-block" }} onClick={handleClick}
+                style={{ gap: "8px" }} onClick={handleClick}
             >
                 <img src={`./images/${file.type}.svg`} alt="file" style={{ width: "25px" }} onError={(e) => e.target.src = "./images/file.svg"} />
                 <div className='d-flex flex-grow-1 text-truncate'>
@@ -98,9 +98,6 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
                     <ActionButton icon={faSave} onClick={handleDownload}>
                         Download
                     </ActionButton>
-                    {/* <ActionButton icon={faCircleQuestion} onClick={openDetails}>
-                        Show details
-                    </ActionButton> */}
                     <ActionButton icon={file.isFavorite ? faHeartBroken : faHeart} onClick={toggleFav}>
                         {file.isFavorite ? "Remove from favorites" : "Add to favorites"}
                     </ActionButton>

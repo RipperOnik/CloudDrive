@@ -186,14 +186,9 @@ export default function Dashboard() {
             <div className='d-flex w-100 flex-grow-1' style={{ gap: "10px", overflow: 'hidden', minHeight: '0', minWidth: '0' }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
                 <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
-                    <Stack direction='horizontal' gap={1} className={`flex-shrink-0 align-items-center pb-2 pt-2 ${(!isFavorites && !isSearch) ? 'justify-content-end' : ''}`} style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", minHeight: "50px", padding: "0 15px" }}>
-                        {isSearch && <div className='flex-grow-1'>Search results for {query}</div>}
-                        {isFavorites && <div className='flex-grow-1'>Favorites</div>}
+                    <Stack direction='horizontal' gap={1} className='flex-shrink-0 align-items-center pb-2 pt-2 justify-content-end' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", minHeight: "50px", padding: "0 15px" }}>
                         <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} />
-                        {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{
-                            borderLeft: `${isSearch || isFavorites ? '1px solid rgba(0, 0, 0, 0.2)' : ''}`,
-                            paddingLeft: `${isSearch || isFavorites ? '10px' : ''}`
-                        }}>
+                        {elements[activeIndex] && <Stack direction='horizontal' gap={1}>
                             <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                             <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={handleEdit} />
                             {elements[activeIndex].url && <FontAwesomeIcon icon={faSave} className="circular-button" onClick={handleDownload} />}
@@ -204,33 +199,37 @@ export default function Dashboard() {
                         {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} folders={folders} />}
                     </Stack>
                     <div className='d-flex flex-grow-1' onClick={resetActiveIndex} style={{ minHeight: '0', overflow: 'hidden' }}>
-                        <div style={{ padding: "15px", position: "relative", width: "100%", overflow: 'auto' }} id='main-content' ref={mainRef}>
-                            <FilterDropdown style={{ position: "absolute", top: "5px", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
-                            {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
-                            {folders && folders.length > 0 && (
-                                <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
-                                    {folders.map((childFolder, index) => {
-                                        return <Folder folder={childFolder} key={childFolder.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} setShowDetails={setShowDetails} />
-                                    })}
-                                </Stack>
-                            )}
+                        <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden', padding: "15px", gap: "10px" }}>
+                            {isSearch && <div style={{ fontSize: "24px" }}>Search results for {query}</div>}
+                            {isFavorites && <div style={{ fontSize: "24px" }}>Favorites</div>}
+                            <div style={{ position: "relative", width: "100%", overflow: 'auto' }} id='main-content' ref={mainRef}>
+                                <FilterDropdown style={{ position: "absolute", top: "5px", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
+                                {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
+                                {folders && folders.length > 0 && (
+                                    <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
+                                        {folders.map((childFolder, index) => {
+                                            return <Folder folder={childFolder} key={childFolder.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} setShowDetails={setShowDetails} />
+                                        })}
+                                    </Stack>
+                                )}
 
-                            {files && files.length > 0 && <div className='mb-2'>Files</div>}
-                            {files && files.length > 0 && (
-                                <Stack direction="horizontal" className='flex-wrap' gap={3}>
-                                    {files.map((childFile, index) => {
-                                        const newIndex = folders.length + index
-                                        return <File file={childFile} key={childFile.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={newIndex} setShowDetails={setShowDetails} />
-                                    })}
-                                </Stack>
-                            )}
+                                {files && files.length > 0 && <div className='mb-2'>Files</div>}
+                                {files && files.length > 0 && (
+                                    <Stack direction="horizontal" className='flex-wrap' gap={3}>
+                                        {files.map((childFile, index) => {
+                                            const newIndex = folders.length + index
+                                            return <File file={childFile} key={childFile.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={newIndex} setShowDetails={setShowDetails} />
+                                        })}
+                                    </Stack>
+                                )}
+                            </div>
                         </div>
                         <Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />
                     </div>
                     {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
-                        style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
+                        style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white", padding: "0 15px" }} />}
                     {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex}
-                        style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
+                        style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white", padding: "0 15px" }} />}
 
                 </div>
 

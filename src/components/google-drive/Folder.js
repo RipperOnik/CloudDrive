@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Overlay, Popover } from 'react-bootstrap'
 import ActionButton from './ActionButton'
-import { faTrashCan, faEdit, faCircleQuestion, faHeart } from "@fortawesome/free-regular-svg-icons"
+import { faTrashCan, faEdit, faHeart } from "@fortawesome/free-regular-svg-icons"
 import { faHeartBroken } from '@fortawesome/free-solid-svg-icons'
 import { database } from '../../firebase'
 import { useAuth } from '../../contexts/AuthContext'
@@ -75,7 +75,7 @@ export default function Folder({ folder, index, activeIndex, setActiveIndex, set
     return (
         <>
             <div onClick={handleClick}
-                className={`file d-flex align-items-center ${isActive ? "file--active" : ''}`} ref={target} onContextMenu={handleRightClick} style={{ gap: "8px", width: "200px", cursor: "pointer", display: "inline-block" }}>
+                className={`file d-flex align-items-center ${isActive ? "file--active" : ''}`} ref={target} onContextMenu={handleRightClick} style={{ gap: "8px" }}>
                 <img src="./images/folder.svg" alt="folder" style={{ width: "25px" }} />
                 <span className='text-truncate'>{folder.name}</span>
             </div>
@@ -87,9 +87,6 @@ export default function Folder({ folder, index, activeIndex, setActiveIndex, set
                     <ActionButton icon={faEdit} onClick={openRenameModal}>
                         Rename
                     </ActionButton>
-                    {/* <ActionButton icon={faCircleQuestion} onClick={openDetails}>
-                        Show details
-                    </ActionButton> */}
                     <ActionButton icon={folder.isFavorite ? faHeartBroken : faHeart} onClick={toggleFav}>
                         {folder.isFavorite ? "Remove from favorites" : "Add to favorites"}
                     </ActionButton>
