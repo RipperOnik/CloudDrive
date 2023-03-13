@@ -164,8 +164,6 @@ export function useFolder(folderId = null, folder = null) {
             for (let i = 0; i < state.allFolders.length; i++) {
                 const folder = state.allFolders[i]
                 const newSize = calculateFolderSize(folder.id, state.allFolders, state.allFiles)
-                console.log(folder)
-                console.log(newSize)
                 if (newSize === folder.size) {
                     break
                 }
