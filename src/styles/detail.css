@@ -1,13 +1,12 @@
 .details {
   padding: 15px;
-  width: max-content;
+  width: 250px;
   border-left: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   gap: 20px;
   height: 100vh;
   flex-direction: column;
   overflow: hidden;
-  /* transition: width 0.2s ease-in-out, flex-basis 0.2s ease-in-out; */
   position: relative;
 }
 
@@ -26,7 +25,3 @@
   gap: 15px;
   flex-direction: column;
 }
-
-/* #sidebar-details {
-  transition: width 0.2s ease-in-out, flex-basis 0.2s ease-in-out;
-} */

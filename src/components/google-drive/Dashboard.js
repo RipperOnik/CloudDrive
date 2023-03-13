@@ -194,8 +194,8 @@ export default function Dashboard() {
             <Navbar resetActiveIndex={resetActiveIndex} />
             <div className='d-flex w-100 h-100' style={{ gap: "10px" }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
-                <div className='flex-grow-1' style={{ paddingRight: "15px" }}>
-                    <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", minHeight: "65px", paddingLeft: "15px" }}>
+                <div className='flex-grow-1'>
+                    <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", minHeight: "65px", padding: "0 15px" }}>
                         {isSearch && <div className='flex-grow-1'>Search results for {query}</div>}
                         {isFavorites && <div className='flex-grow-1'>Favorites</div>}
                         {!isFavorites && !isSearch && <div className='flex-grow-1 flex-shrink-1'>Drive</div>}
@@ -210,8 +210,8 @@ export default function Dashboard() {
                         {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} />}
                         {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} />}
                     </Stack>
-                    <div className='d-flex h-100' onClick={resetActiveIndex}>
-                        <div style={{ padding: "15px", position: "relative" }} className="flex-grow-1" ref={mainRef}>
+                    <div className='d-flex h-100' onClick={resetActiveIndex} ref={mainRef}>
+                        <div style={{ padding: "15px", position: "relative", overflow: 'auto' }} className="flex-grow-1">
                             <FilterDropdown style={{ position: "absolute", top: "5px", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
                             {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                             {folders && folders.length > 0 && (

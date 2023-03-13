@@ -45,7 +45,7 @@ export default function Details({ element, setShowDetails, showDetails }) {
                 <img src={isFile ? `./images/${element.type}.svg` : "./images/folder.svg"} alt="file" style={{ width: "35px" }} onError={(e) => e.target.src = "./images/file.svg"} />
                 <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{element.name}</div>
               </a>
-              <button type='button' className='btn-close' style={{ width: "2px", position: "absolute", right: "3px", top: "3px" }} onClick={() => setShowDetails(false)} />
+              <button type='button' className='btn-close' style={{ width: "2px", position: "absolute", right: "10px", top: "3px" }} onClick={() => setShowDetails(false)} />
               <div className='details-body'>
                 <Detail name="Size" value={size} />
                 <Detail name="Type" value={capitalize(isFile ? element.type : "folder")} />
@@ -65,7 +65,7 @@ export default function Details({ element, setShowDetails, showDetails }) {
         <Collapse in={showDetails} dimension='width' id='sidebar-details'>
           <div id='collapsed-details'>
             <div className='details'>
-              <button type='button' className='btn-close' style={{ width: "2px", position: "absolute", right: "3px", top: "3px" }} onClick={() => setShowDetails(false)} />
+              <button type='button' className='btn-close' style={{ width: "2px", position: "absolute", right: "10px", top: "3px" }} onClick={() => setShowDetails(false)} />
               <div className='details-body'>
                 <div className='text-muted'>Select a file or folder</div>
                 <div className='text-muted'>to view its details</div>
