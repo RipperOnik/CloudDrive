@@ -9,7 +9,7 @@ export default function FolderBreadcrumbs({ currentFolder, resetActiveIndex, sty
         path = [...path, ...currentFolder.path]
     }
     return (
-        <Breadcrumb listProps={{ className: "pl-0 m-0" }} className="flex-grow-1" style={style}>
+        <Breadcrumb listProps={{ className: "pl-0 m-0" }} style={{ minHeight: "40px", ...style }}>
             {path.map((folder, index) => {
                 return <Breadcrumb.Item
                     onClick={resetActiveIndex}

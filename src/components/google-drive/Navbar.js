@@ -9,7 +9,7 @@ import SearchResult from './SearchResult'
 import { useFolder } from '../../hooks/useFolder'
 import SideBar from './SideBar'
 
-export default function NavbarComponent({ resetActiveIndex }) {
+export default function NavbarComponent({ resetActiveIndex, style }) {
     const [text, setText] = useState("")
     const [width, setWidth] = useState(0)
     const target = useRef()
@@ -148,7 +148,7 @@ export default function NavbarComponent({ resetActiveIndex }) {
     if (!showSearchBar) {
         return (
             <>
-                <Navbar bg="white" expand="md" style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)" }}>
+                <Navbar bg="white" expand="md" style={{ height: "73px", borderBottom: "1px solid rgba(0, 0, 0, 0.2)", ...style }}>
                     <Stack direction='horizontal' className='w-100' style={{ padding: "0 15px" }}>
                         <Stack direction='horizontal' className='flex-grow-1' gap={2}>
                             <Navbar.Toggle onClick={handleOpenBurger} />

@@ -20,6 +20,7 @@ import SideBar from './SideBar'
 import FilterDropdown from './FilterDropdown'
 import ElementBreadcrumbs from './ElementBreadcrumbs'
 import DetailsMobile from './DetailsMobile'
+import { divideFileName } from './File'
 
 export const filters = { DATE: "date", NAME: "name", SIZE: "size" }
 
@@ -103,9 +104,10 @@ export default function Dashboard() {
         e.preventDefault()
         setShowModal(false)
         const element = elementToRename.current
+        const fullFileName = inputRef.current.value + activeFileExtension
         if (element.url) {
-            if (element.name !== inputRef.current.value) {
-                database.files.update(element.id, { name: inputRef.current.value })
+            if (element.name !== fullFileName) {
+                database.files.update(element.id, { name: fullFileName })
             }
         }
         else {
@@ -129,6 +131,9 @@ export default function Dashboard() {
     function resetActiveIndex() {
         setActiveIndex(-1)
     }
+
+
+    const mainRef = useRef(null)
     useEffect(() => {
         const resetClickElement = mainRef.current
         resetClickElement.addEventListener('click', resetActiveIndex)
@@ -154,22 +159,6 @@ export default function Dashboard() {
     }
 
 
-
-    const [mainWidth, setMainWidth] = useState(0)
-
-    const myObserver = useMemo(() => new ResizeObserver(entries => {
-        // this will get called whenever div dimension changes
-        entries.forEach(entry => {
-            setMainWidth(entry.contentRect.width)
-        });
-    }), [])
-    const mainRef = useRef(null)
-
-    useEffect(() => {
-        myObserver.observe(mainRef.current)
-        return () => myObserver.disconnect()
-    }, [myObserver])
-
     function handleDownload() {
         storageManager.download(elements[activeIndex].url, elements[activeIndex].name)
     }
@@ -181,6 +170,8 @@ export default function Dashboard() {
         setShowDetailsMobile(true)
     }
 
+    const [activeFileName, activeFileExtension] = divideFileName(elements[activeIndex] ? elements[activeIndex].name : '')
+
 
 
 
@@ -190,17 +181,19 @@ export default function Dashboard() {
 
 
     return (
-        <div style={{ height: '100vh' }}>
+        <div className='h-100 d-flex flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
             <Navbar resetActiveIndex={resetActiveIndex} />
-            <div className='d-flex w-100 h-100' style={{ gap: "10px" }}>
+            <div className='d-flex w-100 flex-grow-1' style={{ gap: "10px", overflow: 'hidden', minHeight: '0', minWidth: '0' }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
-                <div className='flex-grow-1'>
-                    <Stack direction='horizontal' gap={2} className='align-items-center pb-2 pt-2' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", minHeight: "65px", padding: "0 15px" }}>
+                <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
+                    <Stack direction='horizontal' gap={1} className={`flex-shrink-0 align-items-center pb-2 pt-2 ${(!isFavorites && !isSearch) ? 'justify-content-end' : ''}`} style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", minHeight: "50px", padding: "0 15px" }}>
                         {isSearch && <div className='flex-grow-1'>Search results for {query}</div>}
                         {isFavorites && <div className='flex-grow-1'>Favorites</div>}
-                        {!isFavorites && !isSearch && <div className='flex-grow-1 flex-shrink-1'>Drive</div>}
                         <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} />
-                        {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 10px" }}>
+                        {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{
+                            borderLeft: `${isSearch || isFavorites ? '1px solid rgba(0, 0, 0, 0.2)' : ''}`,
+                            paddingLeft: `${isSearch || isFavorites ? '10px' : ''}`
+                        }}>
                             <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                             <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={handleEdit} />
                             {elements[activeIndex].url && <FontAwesomeIcon icon={faSave} className="circular-button" onClick={handleDownload} />}
@@ -208,10 +201,10 @@ export default function Dashboard() {
                             <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-md-none" onClick={openDetailsMobile} />
                         </Stack>}
                         {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} />}
-                        {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} />}
+                        {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} folders={folders} />}
                     </Stack>
-                    <div className='d-flex h-100' onClick={resetActiveIndex} ref={mainRef}>
-                        <div style={{ padding: "15px", position: "relative", overflow: 'auto' }} className="flex-grow-1">
+                    <div className='d-flex flex-grow-1' onClick={resetActiveIndex} style={{ minHeight: '0', overflow: 'hidden' }}>
+                        <div style={{ padding: "15px", position: "relative", width: "100%", overflow: 'auto' }} id='main-content' ref={mainRef}>
                             <FilterDropdown style={{ position: "absolute", top: "5px", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
                             {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                             {folders && folders.length > 0 && (
@@ -231,17 +224,19 @@ export default function Dashboard() {
                                     })}
                                 </Stack>
                             )}
-                            {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
-                                style={{ position: "fixed", bottom: "0", width: mainWidth, borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
-                            {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex}
-                                style={{ position: "fixed", bottom: "0", width: mainWidth, borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
                         </div>
                         <Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />
                     </div>
+                    {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
+                        style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
+                    {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex}
+                        style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white" }} />}
+
                 </div>
 
             </div>
-            <RenameModal show={showModal} closeModal={() => setShowModal(false)} onSubmit={handleRename} defaultValue={elements[activeIndex] && elements[activeIndex].name} inputRef={inputRef} />
+            <RenameModal show={showModal} closeModal={() => setShowModal(false)} onSubmit={handleRename}
+                defaultValue={elements[activeIndex] && (elements[activeIndex].url ? activeFileName : elements[activeIndex].name)} inputRef={inputRef} />
             <Offcanvas show={showDetailsMobile} onHide={() => setShowDetailsMobile(false)} placement='end'>
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Details</Offcanvas.Title>

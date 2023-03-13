@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import { Button, Modal, Form } from 'react-bootstrap'
+import { Button, Modal, Form, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFolderPlus } from '@fortawesome/free-solid-svg-icons'
 import { database } from '../../firebase'
 import { useAuth } from '../../contexts/AuthContext'
 import { ROOT_FOLDER } from '../../hooks/useFolder'
 
-export default function AddFolderButton({ currentFolder }) {
+export default function AddFolderButton({ currentFolder, folders }) {
     const [open, setOpen] = useState(false)
     const [name, setName] = useState("")
+    const [showError, setShowError] = useState(false)
     const { currentUser } = useAuth()
 
     function openModal() {
@@ -16,6 +17,8 @@ export default function AddFolderButton({ currentFolder }) {
     }
     function closeModal() {
         setOpen(false)
+        setShowError(false)
+        setName('')
     }
     function handleSubmit(e) {
         e.preventDefault()
@@ -25,6 +28,13 @@ export default function AddFolderButton({ currentFolder }) {
         // since root folder doesn't exist in a database
         if (currentFolder !== ROOT_FOLDER) {
             path.push({ name: currentFolder.name, id: currentFolder.id })
+        }
+
+        for (const folder of folders) {
+            if (folder.name === name) {
+                setShowError(true)
+                return
+            }
         }
 
         database.folders.add({
@@ -48,12 +58,13 @@ export default function AddFolderButton({ currentFolder }) {
             <Modal show={open} onHide={closeModal}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
-
                         <Form.Group>
                             <Form.Label>Folder Name</Form.Label>
-                            <Form.Control type='text' required value={name} onChange={(e) => setName(e.target.value)} />
+                            <Form.Control type='text' required value={name} onChange={(e) => setName(e.target.value)} autoFocus />
                         </Form.Group>
-
+                        <Alert variant='danger' show={showError} onClose={() => setShowError(false)} dismissible className='mt-2'>
+                            <Alert.Heading>Folders in a folder should have unique names!</Alert.Heading>
+                        </Alert>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant='danger' onClick={closeModal}>Close</Button>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Modal, Form, Button } from 'react-bootstrap'
 
-
 export default function RenameModal({ show, closeModal, onSubmit, defaultValue, inputRef }) {
     return (
         <Modal show={show} onHide={closeModal}>
