@@ -165,7 +165,7 @@ export function useFolder(folderId = null, folder = null) {
                 const folder = state.allFolders[i]
                 const newSize = calculateFolderSize(folder.id, state.allFolders, state.allFiles)
                 if (newSize === folder.size) {
-                    break
+                    continue
                 }
                 const folderRef = doc(database.folders.collection, folder.id)
                 await updateDoc(folderRef, { size: newSize })
