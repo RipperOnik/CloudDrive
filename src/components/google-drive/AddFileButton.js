@@ -20,7 +20,7 @@ const convertToType = {
     ".pptx": "powerpoint", ".pptm": "powerpoint", ".ppt": "powerpoint"
 }
 
-export default function AddFileButton({ currentFolder }) {
+export default function AddFileButton({ currentFolder, style }) {
 
     const { currentUser } = useAuth()
     const [uploadingFiles, setUploadingFiles] = useState([])
@@ -106,7 +106,7 @@ export default function AddFileButton({ currentFolder }) {
     return (
         <>
             {/*make the label do the job instead of the input itself */}
-            <label className='btn btn-outline-success btn-sm m-0 mr-2'>
+            <label className='btn btn-outline-success btn-sm mr-2' style={style}>
                 <FontAwesomeIcon icon={faFileUpload} />
                 {/* hide the ugly upload input  */}
                 <input

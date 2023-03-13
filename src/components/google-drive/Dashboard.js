@@ -186,17 +186,17 @@ export default function Dashboard() {
             <div className='d-flex w-100 flex-grow-1' style={{ gap: "10px", overflow: 'hidden', minHeight: '0', minWidth: '0' }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
                 <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
-                    <Stack direction='horizontal' gap={1} className='flex-shrink-0 align-items-center pb-2 pt-2 justify-content-end' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", minHeight: "50px", padding: "0 15px" }}>
+                    <Stack direction='horizontal' gap={1} className='flex-shrink-0 align-items-center justify-content-end' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }}>
                         <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} />
-                        {elements[activeIndex] && <Stack direction='horizontal' gap={1}>
+                        {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ margin: "10px 0" }}>
                             <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                             <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={handleEdit} />
                             {elements[activeIndex].url && <FontAwesomeIcon icon={faSave} className="circular-button" onClick={handleDownload} />}
                             <FontAwesomeIcon icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
                             <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-md-none" onClick={openDetailsMobile} />
                         </Stack>}
-                        {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} />}
-                        {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} folders={folders} />}
+                        {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} style={{ margin: "10px 0" }} />}
+                        {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} folders={folders} style={{ margin: "10px 0" }} />}
                     </Stack>
                     <div className='d-flex flex-grow-1' onClick={resetActiveIndex} style={{ minHeight: '0', overflow: 'hidden' }}>
                         <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden', padding: "15px", gap: "10px" }}>
@@ -204,7 +204,7 @@ export default function Dashboard() {
                             {isFavorites && <div style={{ fontSize: "24px" }}>Favorites</div>}
                             <div style={{ position: "relative", width: "100%", overflow: 'auto' }} id='main-content' ref={mainRef}>
                                 <FilterDropdown style={{ position: "absolute", top: "0", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
-                                {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
+                                {folders && folders.length > 0 && <div className='mb-4'>Folders</div>}
                                 {folders && folders.length > 0 && (
                                     <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
                                         {folders.map((childFolder, index) => {
@@ -213,7 +213,7 @@ export default function Dashboard() {
                                     </Stack>
                                 )}
 
-                                {files && files.length > 0 && <div className='mb-2'>Files</div>}
+                                {files && files.length > 0 && <div className='mb-4'>Files</div>}
                                 {files && files.length > 0 && (
                                     <Stack direction="horizontal" className='flex-wrap' gap={3}>
                                         {files.map((childFile, index) => {
