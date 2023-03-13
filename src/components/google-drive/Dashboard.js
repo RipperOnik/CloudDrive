@@ -203,7 +203,7 @@ export default function Dashboard() {
                             {isSearch && <div style={{ fontSize: "24px" }}>Search results for {query}</div>}
                             {isFavorites && <div style={{ fontSize: "24px" }}>Favorites</div>}
                             <div style={{ position: "relative", width: "100%", overflow: 'auto' }} id='main-content' ref={mainRef}>
-                                <FilterDropdown style={{ position: "absolute", top: "5px", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
+                                <FilterDropdown style={{ position: "absolute", top: "0", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
                                 {folders && folders.length > 0 && <div className='mb-2'>Folders</div>}
                                 {folders && folders.length > 0 && (
                                     <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
