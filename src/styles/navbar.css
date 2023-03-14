@@ -34,8 +34,7 @@
   padding-right: 20px;
   border-radius: var(--search-border-radius);
   border-width: 0;
-  background-image: var(--search-gradient);
-  transition: background-image 0.5s ease-in-out;
+  background: var(--search-gradient);
   cursor: pointer;
 }
 .form-search input[type="search"]::placeholder {
@@ -43,7 +42,7 @@
 }
 
 .form-search input[type="search"]:hover {
-  background-image: var(--search-hover-gradient);
+  background: var(--search-hover-gradient);
 }
 .form-search input[type="search"]:focus::placeholder {
   color: transparent;
@@ -51,6 +50,7 @@
 
 .form-search input[type="search"]:focus {
   outline: none;
+  cursor: inherit;
   background-color: white;
   background-image: none;
   border-bottom: none;

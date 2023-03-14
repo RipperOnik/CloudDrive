@@ -12,9 +12,9 @@ export default function Details({ element, setShowDetails, showDetails }) {
     const createdAt = defineDate(element.createdAt)
     return (
       <div style={{ minHeight: '150px' }}>
-        <Collapse in={showDetails} dimension='width' id='sidebar-details'>
-          <div id='collapsed-details'>
-            <div className='details'>
+        <Collapse in={showDetails} dimension='width' id='sidebar-details' className='h-100'>
+          <div id='collapsed-details' className='h-100'>
+            <div className='details h-100'>
               <a href={element.url} target="_blank" className='details-file d-flex' style={{ gap: "8px" }}>
                 <img src={isFile ? `./images/${element.type}.svg` : "./images/folder.svg"} alt="file" style={{ width: "35px" }} onError={(e) => e.target.src = "./images/file.svg"} />
                 <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{element.name}</div>
@@ -35,9 +35,9 @@ export default function Details({ element, setShowDetails, showDetails }) {
   else {
     return (
       <div style={{ minHeight: '150px' }}>
-        <Collapse in={showDetails} dimension='width' id='sidebar-details'>
-          <div id='collapsed-details'>
-            <div className='details'>
+        <Collapse in={showDetails} dimension='width' id='sidebar-details' className='h-100'>
+          <div id='collapsed-details' className='h-100'>
+            <div className='details h-100'>
               <button type='button' className='btn-close' style={{ width: "2px", position: "absolute", right: "10px", top: "3px" }} onClick={() => setShowDetails(false)} />
               <div className='details-body'>
                 <div className='text-muted'>Select a file or folder</div>

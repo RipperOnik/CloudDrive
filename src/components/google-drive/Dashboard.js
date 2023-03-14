@@ -184,9 +184,9 @@ export default function Dashboard() {
         <div className='h-100 d-flex flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
             <Navbar resetActiveIndex={resetActiveIndex} />
             <div className='d-flex w-100 flex-grow-1 main-content' style={{ gap: "10px", overflow: 'hidden', minHeight: '0', minWidth: '0' }}>
-                <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
+                <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} currentFolder={folder} />
                 <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
-                    <Stack direction='horizontal' gap={1} className='flex-shrink-0 align-items-center justify-content-end' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }}>
+                    <Stack direction='horizontal' gap={1} className='flex-shrink-0 align-items-center justify-content-end'>
                         <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} />
                         {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ margin: "10px 0" }}>
                             <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
@@ -195,14 +195,12 @@ export default function Dashboard() {
                             <FontAwesomeIcon icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
                             <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-md-none" onClick={openDetailsMobile} />
                         </Stack>}
-                        {!isSearch && !isFavorites && <AddFileButton currentFolder={folder} style={{ margin: "10px 0" }} />}
-                        {!isSearch && !isFavorites && <AddFolderButton currentFolder={folder} folders={folders} style={{ margin: "10px 0" }} />}
                     </Stack>
-                    <div className='d-flex flex-grow-1' onClick={resetActiveIndex} style={{ minHeight: '0', overflow: 'hidden' }}>
-                        <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden', padding: "15px", gap: "10px" }}>
+                    <div className='d-flex flex-grow-1' onClick={resetActiveIndex} style={{ minHeight: '0', overflow: 'hidden', gap: "20px" }}>
+                        <div className='d-flex flex-grow-1 flex-column main-content-items' style={{ minHeight: '0', overflow: 'hidden', padding: "15px", gap: "10px" }}>
                             {isSearch && <div style={{ fontSize: "24px" }}>Search results for {query}</div>}
                             {isFavorites && <div style={{ fontSize: "24px" }}>Favorites</div>}
-                            <div style={{ position: "relative", width: "100%", overflow: 'auto' }} id='main-content' ref={mainRef}>
+                            <div style={{ position: "relative", width: "100%", overflow: 'auto', flexGrow: '1' }} ref={mainRef}>
                                 <FilterDropdown style={{ position: "absolute", top: "0", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
                                 {folders && folders.length > 0 && <div className='mb-4'>Folders</div>}
                                 {folders && folders.length > 0 && (
@@ -223,14 +221,13 @@ export default function Dashboard() {
                                     </Stack>
                                 )}
                             </div>
+                            {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
+                                style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }} />}
+                            {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex}
+                                style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }} />}
                         </div>
                         <Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />
                     </div>
-                    {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
-                        style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white", padding: "0 15px" }} />}
-                    {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex}
-                        style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", backgroundColor: "white", padding: "0 15px" }} />}
-
                 </div>
 
             </div>

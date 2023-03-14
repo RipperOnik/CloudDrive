@@ -1,13 +1,13 @@
 .details {
   padding: 15px;
   width: 250px;
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   gap: 20px;
-  height: 100vh;
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  background-color: white;
+  border-radius: 24px;
 }
 
 .details-file {

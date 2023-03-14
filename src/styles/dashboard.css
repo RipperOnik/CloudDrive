@@ -33,8 +33,13 @@ body,
 }
 
 .main-content {
-  padding-top: 22px;
+  padding: 20px 20px;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
   background-color: var(--main-background-color);
+}
+
+.main-content-items {
+  background-color: white;
+  border-radius: 24px;
 }
