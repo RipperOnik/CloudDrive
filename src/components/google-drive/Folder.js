@@ -81,13 +81,13 @@ export default function Folder({ folder, index, activeIndex, setActiveIndex, set
             </div>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
                 <Popover>
-                    <ActionButton icon={faTrashCan} onClick={handleRemove}>
+                    <ActionButton icon='delete' onClick={handleRemove}>
                         Remove
                     </ActionButton>
-                    <ActionButton icon={faEdit} onClick={openRenameModal}>
+                    <ActionButton icon='edit' onClick={openRenameModal}>
                         Rename
                     </ActionButton>
-                    <ActionButton icon={folder.isFavorite ? faHeartBroken : faHeart} onClick={toggleFav}>
+                    <ActionButton icon={folder.isFavorite ? 'broken-heart' : 'heart'} onClick={toggleFav}>
                         {folder.isFavorite ? "Remove from favorites" : "Add to favorites"}
                     </ActionButton>
                 </Popover>

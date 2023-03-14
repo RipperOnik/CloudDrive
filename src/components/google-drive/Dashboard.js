@@ -21,6 +21,7 @@ import FilterDropdown from './FilterDropdown'
 import ElementBreadcrumbs from './ElementBreadcrumbs'
 import DetailsMobile from './DetailsMobile'
 import { divideFileName } from './File'
+import "../../styles/mobile.css"
 
 export const filters = { DATE: "date", NAME: "name", SIZE: "size" }
 
@@ -186,19 +187,18 @@ export default function Dashboard() {
             <div className='d-flex w-100 flex-grow-1 main-content' style={{ gap: "10px", overflow: 'hidden', minHeight: '0', minWidth: '0' }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} currentFolder={folder} />
                 <div className='d-flex flex-grow-1' onClick={resetActiveIndex} style={{ minHeight: '0', overflow: 'hidden', gap: "20px" }}>
-                    <div className='d-flex flex-grow-1 flex-column main-content-items' style={{ minHeight: '0', overflow: 'hidden', padding: "15px", gap: "10px" }}>
+                    <div className='d-flex flex-grow-1 flex-column main-content-items' style={{ minHeight: '0', overflow: 'hidden', gap: "10px" }}>
                         <Stack direction='horizontal' className={`${(!isSearch && !isFavorites) ? 'justify-content-end' : ''}`}>
                             {isSearch && <div style={{ fontSize: "24px" }} className='flex-grow-1'>Search results</div>}
                             {isFavorites && <div style={{ fontSize: "24px" }} className='flex-grow-1'>Favorites</div>}
                             {elements[activeIndex] && <Stack direction='horizontal' gap={1} className='menu-buttons' style={{ paddingRight: "5px" }}>
-                                <MenuButton icon={faTrashCan} className="circular-button" onClick={handleRemove} />
-                                <MenuButton icon={faEdit} className="circular-button" onClick={handleEdit} />
-                                {elements[activeIndex].url && <MenuButton icon={faSave} className="circular-button" onClick={handleDownload} />}
-                                <MenuButton icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
-                                <MenuButton icon='info' className="circular-button d-md-none" onClick={openDetailsMobile} />
+                                <MenuButton icon='delete' className="menu-button" onClick={handleRemove} />
+                                <MenuButton icon='edit' className="menu-button" onClick={handleEdit} />
+                                {elements[activeIndex].url && <MenuButton icon='download' className="menu-button" onClick={handleDownload} />}
+                                <MenuButton icon={elements[activeIndex].isFavorite ? 'broken-heart' : 'heart'} className="menu-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
+                                <MenuButton icon='info' className="menu-button d-md-none" onClick={openDetailsMobile} />
                             </Stack>}
-                            {/* <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} style={{ marginLeft: "5px" }} /> */}
-                            <MenuButton icon='info' className="circular-button d-none d-md-block" onClick={toggleDetails} ariaControls='collapsed-details' ariaExpanded={showDetails} style={{ marginLeft: "5px" }} />
+                            <MenuButton icon='info' className="menu-button d-none d-md-block" onClick={toggleDetails} ariaControls='collapsed-details' ariaExpanded={showDetails} style={{ marginLeft: "5px" }} />
                         </Stack>
 
 
@@ -248,9 +248,7 @@ export default function Dashboard() {
 }
 
 
-function MenuButton({ icon, className, style, onClick, ariaConrols, ariaExpanded }) {
-    return typeof icon === 'string' ?
-        <img src={`./images/${icon}.svg`} alt='menu-button' width={42} className={className} style={style} onClick={onClick} aria-controls={ariaConrols} aria-expanded={ariaExpanded} />
-        : <FontAwesomeIcon icon={icon} className={`${className}`} style={style} onClick={onClick} aria-controls={ariaConrols} aria-expanded={ariaExpanded} />
+export function MenuButton({ icon, className, style, onClick, ariaConrols, ariaExpanded }) {
+    return <img src={`./images/${icon}.svg`} alt='menu-button' className={`${className}`} style={style} onClick={onClick} aria-controls={ariaConrols} aria-expanded={ariaExpanded} />
 
 }

@@ -14,6 +14,7 @@ import { createPortal } from 'react-dom';
 import { query, where, getDocs, updateDoc } from "firebase/firestore";
 import { divideFileName } from './File';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { MenuButton } from './Dashboard'
 
 const convertToType = {
     ".doc": "word", ".docx": "word", ".odt": "word", ".pages": "word",
@@ -59,7 +60,7 @@ export default function SideBar({ folders, resetActiveIndex, isMobile = false, o
 
             }
 
-            return <Collapsable icon={isRoot ? faFolder : "folder"} name={isRoot ? "All files" : folder.name} key={folder.id} onClick={click}>
+            return <Collapsable icon={isRoot ? "root-folder" : "folder"} name={isRoot ? "All files" : folder.name} key={folder.id} onClick={click}>
                 {childFolders.length > 0 && childFolders}
             </Collapsable>
         }
@@ -215,7 +216,8 @@ export default function SideBar({ folders, resetActiveIndex, isMobile = false, o
                             {/*make the label do the job instead of the input itself */}
                             <label style={{ cursor: 'pointer' }}>
                                 <Stack gap={2} direction='horizontal'>
-                                    <img src={`./images/add-file.svg`} alt='action button' width={20} />
+                                    {/* <img src={`./images/add-file.svg`} alt='action button' width={20} /> */}
+                                    <MenuButton icon='add-file' className='menu-button' />
                                     File upload
                                 </Stack>
                                 {/* hide the ugly upload input  */}
@@ -231,7 +233,7 @@ export default function SideBar({ folders, resetActiveIndex, isMobile = false, o
 
 
                     {getAllFolders(ROOT_FOLDER)}
-                    <Collapsable icon={faHeart} name={"Favorite"} onClick={() => {
+                    <Collapsable icon='heart' name={"Favorite"} onClick={() => {
                         navigate("/favorites")
                         if (isMobile) {
                             onHide()
@@ -294,7 +296,7 @@ export default function SideBar({ folders, resetActiveIndex, isMobile = false, o
 
 
 function Collapsable({ icon, name, children, onClick }) {
-    const isSvg = typeof icon === 'string'
+
     const [isOpen, setIsOpen] = useState(false)
     const id = uuidV4()
     function toggle(e) {
@@ -310,7 +312,7 @@ function Collapsable({ icon, name, children, onClick }) {
         <div className='collapsable'>
             <Stack direction='horizontal' gap={2} onClick={open}>
                 {children && <FontAwesomeIcon icon={isOpen ? faChevronDown : faChevronRight} size="xs" onClick={toggle} aria-expanded={isOpen} aria-controls={id} className="chevron" />}
-                {isSvg ? <img src={`./images/${icon}.svg`} alt="icon" style={{ width: "20px" }} /> : <FontAwesomeIcon icon={icon} style={{ width: "20px" }} />}
+                <img src={`./images/${icon}.svg`} alt="icon" style={{ width: "24px" }} />
                 <div className='text-truncate'>{name}</div>
             </Stack>
         </div>
@@ -334,7 +336,7 @@ function ButtonTooltip({ target, show, onHide, children }) {
         }
     }, [])
     return (
-        <div className='tooltip--button flex-grow-1'>
+        <div className='tooltip--button flex-grow-1 d-none d-md-flex'>
             {target}
             <div className='tooltip-body-button' style={{
                 visibility: show ? 'visible' : 'hidden',

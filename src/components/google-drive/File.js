@@ -8,6 +8,7 @@ import { database, storageManager } from '../../firebase'
 import ActionButton from './ActionButton'
 import RenameModal from './RenameModal'
 import "../../styles/file.css"
+import { MenuButton } from './Dashboard'
 
 export default function File({ file, index, activeIndex, setActiveIndex, setShowDetails }) {
     const [showPopover, setShowPopover] = useState(false);
@@ -89,16 +90,16 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
             </div>
             <Overlay target={target.current} show={showPopover} placement="right" rootClose onHide={closePopover}>
                 <Popover>
-                    <ActionButton icon={faTrashCan} onClick={handleRemove}>
+                    <ActionButton icon='delete' onClick={handleRemove}>
                         Remove
                     </ActionButton>
-                    <ActionButton icon={faEdit} onClick={openRenameModal}>
+                    <ActionButton icon='edit' onClick={openRenameModal}>
                         Rename
                     </ActionButton>
-                    <ActionButton icon={faSave} onClick={handleDownload}>
+                    <ActionButton icon='download' onClick={handleDownload}>
                         Download
                     </ActionButton>
-                    <ActionButton icon={file.isFavorite ? faHeartBroken : faHeart} onClick={toggleFav}>
+                    <ActionButton icon={file.isFavorite ? 'broken-heart' : 'heart'} onClick={toggleFav}>
                         {file.isFavorite ? "Remove from favorites" : "Add to favorites"}
                     </ActionButton>
                 </Popover>
