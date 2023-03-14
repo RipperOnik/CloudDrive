@@ -190,12 +190,12 @@ export default function Dashboard() {
                         <Stack direction='horizontal' className={`${(!isSearch && !isFavorites) ? 'justify-content-end' : ''}`}>
                             {isSearch && <div style={{ fontSize: "24px" }} className='flex-grow-1'>Search results</div>}
                             {isFavorites && <div style={{ fontSize: "24px" }} className='flex-grow-1'>Favorites</div>}
-                            {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderRight: "1px solid rgba(0, 0, 0, 0.2)", paddingRight: "5px" }}>
+                            {elements[activeIndex] && <Stack direction='horizontal' gap={1} className='menu-buttons' style={{ paddingRight: "5px" }}>
                                 <MenuButton icon={faTrashCan} className="circular-button" onClick={handleRemove} />
                                 <MenuButton icon={faEdit} className="circular-button" onClick={handleEdit} />
-                                {elements[activeIndex].url && <FontAwesomeIcon icon={faSave} className="circular-button" onClick={handleDownload} />}
+                                {elements[activeIndex].url && <MenuButton icon={faSave} className="circular-button" onClick={handleDownload} />}
                                 <MenuButton icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
-                                <MenuButton icon={faCircleQuestion} className="circular-button d-md-none" onClick={openDetailsMobile} />
+                                <MenuButton icon='info' className="circular-button d-md-none" onClick={openDetailsMobile} />
                             </Stack>}
                             {/* <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} style={{ marginLeft: "5px" }} /> */}
                             <MenuButton icon='info' className="circular-button d-none d-md-block" onClick={toggleDetails} ariaControls='collapsed-details' ariaExpanded={showDetails} style={{ marginLeft: "5px" }} />

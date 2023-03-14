@@ -26,3 +26,8 @@
   gap: 15px;
   flex-direction: column;
 }
+
+.details--mobile {
+  border-radius: 0;
+  box-shadow: none;
+}
