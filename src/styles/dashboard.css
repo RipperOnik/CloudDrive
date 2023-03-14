@@ -1,3 +1,17 @@
+:root {
+  --main-background-color: #f6f6fa;
+  --file-color: #f6f6fa;
+  --background--gradient: linear-gradient(
+    to right,
+    #c910a9,
+    #b311a1,
+    #8e1191,
+    #6a1282,
+    #4e1276
+  );
+  --file-active-color: #b74aaf;
+}
+
 .circular-button {
   border-radius: 50%;
   padding: 10px;
@@ -13,4 +27,14 @@ body,
 #root {
   height: 100%;
   overflow: hidden;
+}
+#root {
+  background-image: var(--background--gradient);
+}
+
+.main-content {
+  padding-top: 22px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  background-color: var(--main-background-color);
 }

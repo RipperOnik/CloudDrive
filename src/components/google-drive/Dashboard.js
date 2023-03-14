@@ -183,7 +183,7 @@ export default function Dashboard() {
     return (
         <div className='h-100 d-flex flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
             <Navbar resetActiveIndex={resetActiveIndex} />
-            <div className='d-flex w-100 flex-grow-1' style={{ gap: "10px", overflow: 'hidden', minHeight: '0', minWidth: '0' }}>
+            <div className='d-flex w-100 flex-grow-1 main-content' style={{ gap: "10px", overflow: 'hidden', minHeight: '0', minWidth: '0' }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} />
                 <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
                     <Stack direction='horizontal' gap={1} className='flex-shrink-0 align-items-center justify-content-end' style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }}>

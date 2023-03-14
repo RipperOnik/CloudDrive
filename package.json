@@ -1,6 +1,5 @@
 {
   "name": "drive",
-  "homepage": "http://RipperOnik.github.io/Drive",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

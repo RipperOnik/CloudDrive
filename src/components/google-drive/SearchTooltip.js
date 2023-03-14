@@ -1,6 +1,6 @@
 import React from 'react'
 import { Stack } from 'react-bootstrap'
-import "../../styles/search.css"
+import "../../styles/navbar.css"
 
 
 export default function SearchTooltip({ target, width, show, children }) {
