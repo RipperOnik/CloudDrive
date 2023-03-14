@@ -10,6 +10,7 @@
 }
 .sidebar {
   color: #404040;
+  margin: 2px;
   font-family: MailSans, Arial, sans-serif;
   width: 260px !important;
 }

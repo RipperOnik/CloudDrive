@@ -11,7 +11,7 @@ export default function Details({ element, setShowDetails, showDetails }) {
     const size = convertSize(element.size)
     const createdAt = defineDate(element.createdAt)
     return (
-      <div style={{ minHeight: '150px' }}>
+      <div style={{ minHeight: '150px', margin: "2px" }}>
         <Collapse in={showDetails} dimension='width' id='sidebar-details' className='h-100'>
           <div id='collapsed-details' className='h-100'>
             <div className='details h-100'>
@@ -34,7 +34,7 @@ export default function Details({ element, setShowDetails, showDetails }) {
   }
   else {
     return (
-      <div style={{ minHeight: '150px' }}>
+      <div style={{ minHeight: '150px', margin: "2px" }}>
         <Collapse in={showDetails} dimension='width' id='sidebar-details' className='h-100'>
           <div id='collapsed-details' className='h-100'>
             <div className='details h-100'>
