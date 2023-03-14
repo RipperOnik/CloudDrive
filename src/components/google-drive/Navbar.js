@@ -152,14 +152,12 @@ export default function NavbarComponent({ resetActiveIndex, style }) {
                     <Stack direction='horizontal' className='w-100' style={{ padding: "0 15px" }}>
                         <Stack direction='horizontal' className='flex-grow-1' gap={2}>
                             <img src="./images/menu.svg" alt="menu" className='navbar-menu d-md-none' onClick={handleOpenBurger} />
-                            <Navbar.Brand className='d-flex align-items-center d-none d-md-flex' style={{ gap: "10px", cursor: "pointer", marginRight: "155px" }} onClick={goHome}>
-                                {/* <img src="./images/cloud.svg" alt="logo" width={40} height={40} /> */}
-                                Drive
+                            <Navbar.Brand className='d-flex align-items-center d-none d-md-flex' style={{ gap: "10px", cursor: "pointer", marginRight: "145px" }} onClick={goHome}>
+                                CloudDrive
                             </Navbar.Brand>
                             {/* Mobile Navbar */}
                             <Navbar.Brand className='d-flex align-items-center d-md-none' style={{ gap: "10px", cursor: "pointer" }} onClick={goHome}>
-                                {/* <img src="./images/cloud.svg" alt="logo" width={40} height={40} /> */}
-                                Drive
+                                CloudDrive
                             </Navbar.Brand>
                             <SearchBar handleSearch={handleSearch} showToolTip={showToolTip} setShowTooltip={setShowTooltip} target={target} elements={elements} activeIndex={activeIndex} setActiveIndex={setActiveIndex} setText={setText} text={text}
                                 onHideSearchTooltip={onHideSearchTooltip} handleKeyDown={handleKeyDown} width={width}

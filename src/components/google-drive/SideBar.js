@@ -198,10 +198,13 @@ export default function SideBar({ folders, resetActiveIndex, isMobile = false, o
         return (
             <>
                 <div className={`sidebar flex-shrink-0 ${!isMobile ? 'd-none d-md-block' : 'p-0'}`}>
-                    <ButtonTooltip target={<button className='add-button d-flex align-items-center' style={{ gap: "15px", marginBottom: "20px" }} onClick={openButtonTooltip}>
-                        <div style={{ fontSize: "26px" }}>+</div>
-                        <div>New</div>
-                    </button>}
+                    <ButtonTooltip
+                        target={
+                            <button className='add-button d-flex align-items-center' style={{ gap: "15px", marginBottom: "20px" }} onClick={openButtonTooltip}>
+                                <div style={{ fontSize: "26px" }}>+</div>
+                                <div>New</div>
+                            </button>
+                        }
                         show={showButtonTooltip}
                         onHide={closeButtonTooltip}
                     >

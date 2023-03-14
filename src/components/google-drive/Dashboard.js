@@ -185,49 +185,49 @@ export default function Dashboard() {
             <Navbar resetActiveIndex={resetActiveIndex} />
             <div className='d-flex w-100 flex-grow-1 main-content' style={{ gap: "10px", overflow: 'hidden', minHeight: '0', minWidth: '0' }}>
                 <SideBar folders={allFolders} resetActiveIndex={resetActiveIndex} currentFolder={folder} />
-                <div className='d-flex flex-grow-1 flex-column' style={{ minHeight: '0', overflow: 'hidden' }}>
-                    <Stack direction='horizontal' gap={1} className='flex-shrink-0 align-items-center justify-content-end'>
-                        <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} />
-                        {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ margin: "10px 0" }}>
-                            <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
-                            <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={handleEdit} />
-                            {elements[activeIndex].url && <FontAwesomeIcon icon={faSave} className="circular-button" onClick={handleDownload} />}
-                            <FontAwesomeIcon icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
-                            <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-md-none" onClick={openDetailsMobile} />
-                        </Stack>}
-                    </Stack>
-                    <div className='d-flex flex-grow-1' onClick={resetActiveIndex} style={{ minHeight: '0', overflow: 'hidden', gap: "20px" }}>
-                        <div className='d-flex flex-grow-1 flex-column main-content-items' style={{ minHeight: '0', overflow: 'hidden', padding: "15px", gap: "10px" }}>
-                            {isSearch && <div style={{ fontSize: "24px" }}>Search results for {query}</div>}
-                            {isFavorites && <div style={{ fontSize: "24px" }}>Favorites</div>}
-                            <div style={{ position: "relative", width: "100%", overflow: 'auto', flexGrow: '1' }} ref={mainRef}>
-                                <FilterDropdown style={{ position: "absolute", top: "0", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
-                                {folders && folders.length > 0 && <div className='mb-4'>Folders</div>}
-                                {folders && folders.length > 0 && (
-                                    <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
-                                        {folders.map((childFolder, index) => {
-                                            return <Folder folder={childFolder} key={childFolder.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} setShowDetails={setShowDetails} />
-                                        })}
-                                    </Stack>
-                                )}
+                <div className='d-flex flex-grow-1' onClick={resetActiveIndex} style={{ minHeight: '0', overflow: 'hidden', gap: "20px" }}>
+                    <div className='d-flex flex-grow-1 flex-column main-content-items' style={{ minHeight: '0', overflow: 'hidden', padding: "15px", gap: "10px" }}>
+                        <Stack direction='horizontal' className={`${(!isSearch && !isFavorites) ? 'justify-content-end' : ''}`}>
+                            {isSearch && <div style={{ fontSize: "24px" }} className='flex-grow-1'>Search results</div>}
+                            {isFavorites && <div style={{ fontSize: "24px" }} className='flex-grow-1'>Favorites</div>}
+                            {elements[activeIndex] && <Stack direction='horizontal' gap={1} style={{ borderRight: "1px solid rgba(0, 0, 0, 0.2)", paddingRight: "5px" }}>
+                                <FontAwesomeIcon icon={faTrashCan} className="circular-button" onClick={handleRemove} />
+                                <FontAwesomeIcon icon={faEdit} className="circular-button" onClick={handleEdit} />
+                                {elements[activeIndex].url && <FontAwesomeIcon icon={faSave} className="circular-button" onClick={handleDownload} />}
+                                <FontAwesomeIcon icon={elements[activeIndex].isFavorite ? faHeartBroken : faHeart} className="circular-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
+                                <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-md-none" onClick={openDetailsMobile} />
+                            </Stack>}
+                            <FontAwesomeIcon icon={faCircleQuestion} className="circular-button d-none d-md-block" onClick={toggleDetails} aria-controls='collapsed-details' aria-expanded={showDetails} style={{ marginLeft: "5px" }} />
+                        </Stack>
 
-                                {files && files.length > 0 && <div className='mb-4'>Files</div>}
-                                {files && files.length > 0 && (
-                                    <Stack direction="horizontal" className='flex-wrap' gap={3}>
-                                        {files.map((childFile, index) => {
-                                            const newIndex = folders.length + index
-                                            return <File file={childFile} key={childFile.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={newIndex} setShowDetails={setShowDetails} />
-                                        })}
-                                    </Stack>
-                                )}
-                            </div>
-                            {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
-                                style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }} />}
-                            {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex}
-                                style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }} />}
+
+                        <div style={{ position: "relative", width: "100%", overflow: 'auto', flexGrow: '1' }} ref={mainRef}>
+                            <FilterDropdown style={{ position: "absolute", top: "0", right: "0" }} chosenFilter={chosenFilter} setChosenFilter={setChosenFilter} isASC={isASC} setIsASC={setIsASC} />
+                            {folders && folders.length > 0 && <div className='mb-4'>Folders</div>}
+                            {folders && folders.length > 0 && (
+                                <Stack direction="horizontal" className='flex-wrap mb-4' gap={3}>
+                                    {folders.map((childFolder, index) => {
+                                        return <Folder folder={childFolder} key={childFolder.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} setShowDetails={setShowDetails} />
+                                    })}
+                                </Stack>
+                            )}
+
+                            {files && files.length > 0 && <div className='mb-4'>Files</div>}
+                            {files && files.length > 0 && (
+                                <Stack direction="horizontal" className='flex-wrap' gap={3}>
+                                    {files.map((childFile, index) => {
+                                        const newIndex = folders.length + index
+                                        return <File file={childFile} key={childFile.id} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={newIndex} setShowDetails={setShowDetails} />
+                                    })}
+                                </Stack>
+                            )}
                         </div>
-                        <Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />
+                        {elements[activeIndex] && (isSearch || isFavorites) && <ElementBreadcrumbs element={elements[activeIndex]} resetActiveIndex={resetActiveIndex}
+                            style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }} />}
+                        {!isSearch && !isFavorites && <FolderBreadcrumbs currentFolder={folder} resetActiveIndex={resetActiveIndex}
+                            style={{ borderTop: "1px solid rgba(0, 0, 0, 0.2)", padding: "0 15px" }} />}
                     </div>
+                    <Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />
                 </div>
 
             </div>
