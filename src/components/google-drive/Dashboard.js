@@ -332,11 +332,11 @@ export default function Dashboard() {
                         <Stack direction='horizontal' className={`${(!isSearch && !isFavorites) ? 'justify-content-end' : ''}`}>
                             {isSearch && <div style={{ fontSize: "24px" }} className='flex-grow-1'>Search results</div>}
                             {isFavorites && <div style={{ fontSize: "24px" }} className='flex-grow-1'>Favorites</div>}
-                            {elements[activeIndex] && <Stack direction='horizontal' gap={1} className='menu-buttons' style={{ paddingRight: "5px" }}>
+                            {<Stack direction='horizontal' gap={1} className='menu-buttons' style={{ paddingRight: "5px", visibility: elements[activeIndex] ? 'visible' : 'hidden' }}>
                                 <MenuButton icon='delete' className="menu-button" onClick={handleRemove} />
                                 <MenuButton icon='edit' className="menu-button" onClick={handleEdit} />
-                                {elements[activeIndex].url && <MenuButton icon='download' className="menu-button" onClick={handleDownload} />}
-                                <MenuButton icon={elements[activeIndex].isFavorite ? 'broken-heart' : 'heart'} className="menu-button" onClick={elements[activeIndex].url ? toggleFavFile : toggleFavFolder} />
+                                {elements[activeIndex] && elements[activeIndex].url && <MenuButton icon='download' className="menu-button" onClick={handleDownload} />}
+                                <MenuButton icon={elements[activeIndex] && (elements[activeIndex].isFavorite ? 'broken-heart' : 'heart')} className="menu-button" onClick={elements[activeIndex] && (elements[activeIndex].url ? toggleFavFile : toggleFavFolder)} />
                                 <MenuButton icon='info' className="menu-button d-md-none" onClick={openDetailsMobile} />
                             </Stack>}
                             <MenuButton icon='info' className="menu-button d-none d-md-block" onClick={toggleDetails} ariaControls='collapsed-details' ariaExpanded={showDetails} style={{ marginLeft: "5px" }} />

@@ -22,7 +22,6 @@
 .form-search {
   display: flex;
   position: relative;
-  flex-grow: 1;
   max-width: var(--search-max-width);
 }
 .form-search input[type="search"] {

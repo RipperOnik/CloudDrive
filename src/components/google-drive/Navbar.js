@@ -148,7 +148,7 @@ export default function NavbarComponent({ resetActiveIndex, style }) {
     if (!showSearchBar) {
         return (
             <>
-                <Navbar expand="md" style={{ height: "73px", borderBottom: "1px solid rgba(0, 0, 0, 0.2)", ...style }}>
+                <Navbar expand="md" style={{ height: "73px", ...style }}>
                     <Stack direction='horizontal' className='w-100' style={{ padding: "0 15px" }}>
                         <Stack direction='horizontal' className='flex-grow-1' gap={2}>
                             <img src="./images/menu.svg" alt="menu" className='navbar-menu d-md-none' onClick={handleOpenBurger} />
@@ -159,7 +159,8 @@ export default function NavbarComponent({ resetActiveIndex, style }) {
                             <Navbar.Brand className='d-flex align-items-center d-md-none' style={{ gap: "10px", cursor: "pointer" }} onClick={goHome}>
                                 CloudDrive
                             </Navbar.Brand>
-                            <SearchBar handleSearch={handleSearch} showToolTip={showToolTip} setShowTooltip={setShowTooltip} target={target} elements={elements} activeIndex={activeIndex} setActiveIndex={setActiveIndex} setText={setText} text={text}
+                            <SearchBar handleSearch={handleSearch} showToolTip={showToolTip} setShowTooltip={setShowTooltip} target={target} elements={elements} activeIndex={activeIndex} setActiveIndex={setActiveIndex}
+                                setText={setText} text={text}
                                 onHideSearchTooltip={onHideSearchTooltip} handleKeyDown={handleKeyDown} width={width}
                             />
                         </Stack>
@@ -190,11 +191,14 @@ export default function NavbarComponent({ resetActiveIndex, style }) {
     } else {
         const mobileStyle = { width: '100%', maxWidth: 'none' }
 
-        return (<form className={`form-search d-md-none`} onSubmit={handleSearch} style={mobileStyle}>
+        return (<form className='form-search d-md-none' onSubmit={handleSearch} style={mobileStyle}>
             <SearchTooltip
                 show={showToolTip}
                 width={target.current ? target.current.offsetWidth : 0}
-                target={<input autoFocus style={{ borderRadius: 'none' }} type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text} onClick={() => setShowTooltip(true)} onFocus={() => setShowTooltip(true)} onBlur={onHideSearchTooltip} onKeyDown={handleKeyDown} />}>
+                target={
+                    <input autoFocus style={{ borderRadius: 0 }} type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text}
+                        onClick={() => setShowTooltip(true)} onFocus={() => setShowTooltip(true)} onBlur={onHideSearchTooltip} onKeyDown={handleKeyDown} />
+                }>
                 {elements && elements.slice(0, 7).map((element, index) => {
                     return <SearchResult element={element} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} key={element.id} />
                 })}
@@ -219,7 +223,7 @@ function SearchBar({ handleSearch, showToolTip, setShowTooltip, target, elements
         buttonRef.current.style.color = '#f4c7ec'
     }
 
-    return (<form className='form-search d-none d-md-flex' onSubmit={handleSearch} >
+    return (<form className='form-search d-none d-md-flex flex-grow-1' onSubmit={handleSearch} >
         <SearchTooltip
             show={showToolTip}
             width={target.current ? target.current.offsetWidth : 0}
