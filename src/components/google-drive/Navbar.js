@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Navbar, Nav, Offcanvas, Stack } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
-import "../../styles/navbar.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import SearchTooltip from './SearchTooltip'
 import SearchResult from './SearchResult'
 import { useFolder } from '../../hooks/useFolder'
 import SideBar from './SideBar'
+import "../../styles/navbar.css"
 
 export default function NavbarComponent({ resetActiveIndex, style }) {
     const [text, setText] = useState("")
