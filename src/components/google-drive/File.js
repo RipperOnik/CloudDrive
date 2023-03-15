@@ -41,8 +41,8 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
     function handleRename(e) {
         e.preventDefault()
         closeModal()
-        if (file.name !== inputRef.current.value) {
-            database.files.update(file.id, { name: inputRef.current.value })
+        if (fileName !== inputRef.current.value) {
+            database.files.update(file.id, { name: inputRef.current.value + fileExtension })
         }
     }
     function handleDownload() {
@@ -58,11 +58,6 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
             window.open(file.url, "_blank")
         }
     }
-    function openDetails(e) {
-        setShowDetails(true)
-        closePopover()
-        setActiveIndex(index)
-    }
 
     function toggleFav() {
         database.files.toggleFav(file.id, file.isFavorite)
@@ -74,6 +69,8 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
             document.body.removeEventListener('click', closePopover)
         }
     }, [])
+
+
 
 
 
@@ -104,7 +101,7 @@ export default function File({ file, index, activeIndex, setActiveIndex, setShow
                     </ActionButton>
                 </Popover>
             </Overlay>
-            <RenameModal show={showModal} closeModal={closeModal} onSubmit={handleRename} defaultValue={file.name} inputRef={inputRef} />
+            <RenameModal show={showModal} closeModal={closeModal} onSubmit={handleRename} defaultValue={fileName} inputRef={inputRef} />
 
         </>
 
