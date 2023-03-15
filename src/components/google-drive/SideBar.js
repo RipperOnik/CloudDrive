@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Collapse, Stack, Modal, Form, Alert, Button, Toast, ProgressBar } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { faFolder, faHeart } from '@fortawesome/free-regular-svg-icons'
 import { v4 as uuidV4 } from 'uuid'
 import { ROOT_FOLDER } from '../../hooks/useFolder'
 import { useNavigate } from 'react-router-dom'
@@ -208,6 +207,8 @@ export default function SideBar({ folders, resetActiveIndex, isMobile = false, o
                         }
                         show={showButtonTooltip}
                         onHide={closeButtonTooltip}
+                        top="0"
+                        className='d-none d-md-flex'
                     >
                         <ActionButton icon='add-folder' onClick={() => setShowAddFolderModal(true)}>
                             New folder
@@ -328,7 +329,7 @@ function Collapsable({ icon, name, children, onClick }) {
 
 
 
-function ButtonTooltip({ target, show, onHide, children }) {
+export function ButtonTooltip({ target, show, onHide, children, top, left, right, bottom, className, style }) {
     useEffect(() => {
         document.body.addEventListener('click', onHide)
         return () => {
@@ -336,12 +337,15 @@ function ButtonTooltip({ target, show, onHide, children }) {
         }
     }, [])
     return (
-        <div className='tooltip--button flex-grow-1 d-none d-md-flex'>
+        <div className={`tooltip--button flex-grow-1 ${className}`} style={style}>
             {target}
             <div className='tooltip-body-button' style={{
                 visibility: show ? 'visible' : 'hidden',
                 minWidth: "200px",
-                top: '0'
+                top: top,
+                left: left,
+                right: right,
+                bottom: bottom
             }}>
                 <Stack className='w-100'>
                     {children}

@@ -152,7 +152,7 @@ export default function NavbarComponent({ resetActiveIndex, style }) {
                     <Stack direction='horizontal' className='w-100' style={{ padding: "0 15px" }}>
                         <Stack direction='horizontal' className='flex-grow-1' gap={2}>
                             <img src="./images/menu.svg" alt="menu" className='navbar-menu d-md-none' onClick={handleOpenBurger} />
-                            <Navbar.Brand className='d-flex align-items-center d-none d-md-flex' style={{ gap: "10px", cursor: "pointer", marginRight: "148px" }} onClick={goHome}>
+                            <Navbar.Brand className='d-flex align-items-center d-none d-md-flex' style={{ gap: "10px", cursor: "pointer", marginRight: "173px" }} onClick={goHome}>
                                 CloudDrive
                             </Navbar.Brand>
                             {/* Mobile Navbar */}

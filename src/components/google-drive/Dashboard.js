@@ -1,19 +1,14 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Navbar from './Navbar'
-import { Offcanvas, Stack } from 'react-bootstrap'
-import AddFolderButton from './AddFolderButton'
+import { Offcanvas, Stack, Modal, Form, Button, Alert, Toast, ProgressBar } from 'react-bootstrap'
 import { useFolder } from '../../hooks/useFolder'
 import Folder from './Folder'
 import { useParams, useLocation } from 'react-router-dom'
 import FolderBreadcrumbs from './FolderBreadcrumbs'
-import AddFileButton from './AddFileButton'
 import File from './File'
 import Details from './Details'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan, faEdit, faCircleQuestion, faHeart, faSave } from "@fortawesome/free-regular-svg-icons"
-import { faHeartBroken } from '@fortawesome/free-solid-svg-icons'
 import "../../styles/dashboard.css"
-import { database, storageManager } from '../../firebase'
+import { database, storageManager, storage } from '../../firebase'
 import RenameModal from "./RenameModal"
 import { useAuth } from '../../contexts/AuthContext'
 import SideBar from './SideBar'
@@ -22,6 +17,14 @@ import ElementBreadcrumbs from './ElementBreadcrumbs'
 import DetailsMobile from './DetailsMobile'
 import { divideFileName } from './File'
 import "../../styles/mobile.css"
+import { ButtonTooltip } from './SideBar'
+import { ROOT_FOLDER } from '../../hooks/useFolder'
+import { createPortal } from 'react-dom';
+import { query, where, getDocs, updateDoc } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { v4 as uuidV4 } from 'uuid'
+import ActionButton from './ActionButton'
+
 
 export const filters = { DATE: "date", NAME: "name", SIZE: "size" }
 
@@ -32,13 +35,13 @@ export default function Dashboard() {
     const { state = {} } = useLocation()
 
     const { currentUser } = useAuth()
-    const { query } = useParams()
+    const { query: querySearch } = useParams()
 
     const [chosenFilter, setChosenFilter] = useState(filters.DATE)
     const [isASC, setIsASC] = useState(true)
 
 
-    const isSearch = typeof query !== 'undefined'
+    const isSearch = typeof querySearch !== 'undefined'
     const isFavorites = window.location.href.includes("favorites")
 
 
@@ -51,8 +54,8 @@ export default function Dashboard() {
         folders = allFolders.filter(f => f.isFavorite)
         files = allFiles.filter(f => f.isFavorite)
     } else if (isSearch) {
-        folders = allFolders.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))
-        files = allFiles.filter(f => f.name.toLowerCase().includes(query.toLowerCase()))
+        folders = allFolders.filter(f => f.name.toLowerCase().includes(querySearch.toLowerCase()))
+        files = allFiles.filter(f => f.name.toLowerCase().includes(querySearch.toLowerCase()))
     }
     function sortFunc(a, b) {
         if (chosenFilter === filters.DATE) {
@@ -173,9 +176,148 @@ export default function Dashboard() {
 
     const [activeFileName, activeFileExtension] = divideFileName(elements[activeIndex] ? elements[activeIndex].name : '')
 
+    //floating button
+    const [showButtonTooltip, setShowButtonTooltip] = useState(false)
+    function closeButtonTooltip() {
+        setShowButtonTooltip(false)
+    }
+    function openButtonTooltip(e) {
+        e.stopPropagation()
+        setShowButtonTooltip(true)
+    }
+    //floating buttons ends
+
+    // Add folder
+    const [showAddFolderModal, setShowAddFolderModal] = useState(false)
+    const [name, setName] = useState("")
+    const [showError, setShowError] = useState(false)
+
+    function closeModal() {
+        setShowAddFolderModal(false)
+        setShowError(false)
+        setName('')
+    }
+    function handleSubmit(e) {
+        const currentFolder = folder
+        e.preventDefault()
+        if (currentFolder == null) return
+
+        const path = [...currentFolder.path]
+        // since root folder doesn't exist in a database
+        if (currentFolder !== ROOT_FOLDER) {
+            path.push({ name: currentFolder.name, id: currentFolder.id })
+        }
+
+        for (const folder of folders) {
+            if (folder.name === name) {
+                setShowError(true)
+                return
+            }
+        }
+
+        database.folders.add({
+            name: name,
+            parentId: currentFolder.id,
+            userId: currentUser.uid,
+            path: path,
+            createdAt: new Date().toString(),
+            isFavorite: false,
+            size: 0
+        })
+        setName("")
+        closeModal()
+    }
+    // add folder ends
+
+    // upload file
+    const [uploadingFiles, setUploadingFiles] = useState([])
+    function handleUpload(e) {
+        const convertToType = {
+            ".doc": "word", ".docx": "word", ".odt": "word", ".pages": "word",
+            ".pdf": "pdf",
+            ".xlsx": "excel", ".xls": "excel", ".csv": "excel",
+            ".pptx": "powerpoint", ".pptm": "powerpoint", ".ppt": "powerpoint"
+        }
+        const currentFolder = folder
+        const file = e.target.files[0]
+        if (currentFolder == null || file == null) {
+            return
+        }
+        const id = uuidV4()
+        setUploadingFiles(prev => [...prev, { id: id, name: file.name, process: 0, error: false }])
+        const parentPath = currentFolder.path.map(p => p.id).join('/')
+        const filePath =
+            currentFolder === ROOT_FOLDER
+                ? `${parentPath}/${file.name}`
+                : `${parentPath}/${currentFolder.name}/${file.name}`
+        const fullPath = `/files/${currentUser.uid}/${filePath}`
+        const storageRef = ref(storage, fullPath)
+        const uploadTask = uploadBytesResumable(storageRef, file);
 
 
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                // Observe state change events such as progress, pause, and resume
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress = snapshot.bytesTransferred / snapshot.totalBytes
+                setUploadingFiles(prev => {
+                    return prev.map(uploadFile => {
+                        if (uploadFile.id === id) {
+                            return { ...uploadFile, progress: progress }
+                        }
+                        return uploadFile
+                    })
+                })
+            },
+            () => {
+                // Handle unsuccessful uploads
+                setUploadingFiles(prev => prev.map(uploadFile => {
+                    if (uploadFile.id === id) {
+                        return { ...uploadFile, error: true }
+                    }
+                    return uploadFile
+                }))
+            },
+            () => {
+                setUploadingFiles(prev => prev.filter(uploadFile => uploadFile.id !== id))
 
+                // Handle successful uploads on complete
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    // check if file exists in a specified folder
+                    const q = query(database.files.collection, where("name", "==", file.name), where("userId", "==", currentUser.uid), where("folderId", "==", currentFolder.id))
+
+                    getDocs(q).then(existingFiles => {
+                        const existingFile = existingFiles.docs[0]
+                        if (existingFile) {
+                            updateDoc(existingFile.ref, { url: url })
+                        } else {
+                            let fileType = file.type.split("/")[0]
+                            if (fileType === "application") {
+                                const fileExtension = divideFileName(file.name)[1]
+                                fileType = convertToType[fileExtension]
+                            }
+                            database.files.add({
+                                url: url,
+                                name: file.name,
+                                createdAt: new Date().toString(),
+                                folderId: currentFolder.id,
+                                userId: currentUser.uid,
+                                fileStoragePath: fullPath,
+                                type: fileType,
+                                size: file.size,
+                                isFavorite: false
+                            })
+                        }
+                    })
+                });
+            }
+        );
+
+    }
+    function clearFile(e) {
+        e.target.value = null
+    }
+    // upload file ends
 
 
 
@@ -230,8 +372,47 @@ export default function Dashboard() {
                     </div>
                     <Details element={elements[activeIndex]} setShowDetails={setShowDetails} showDetails={showDetails} />
                 </div>
+                <ButtonTooltip
+                    target={
+                        <button className='add-button add-button--floating' onClick={openButtonTooltip}>
+                            <div style={{ fontSize: "40px", position: "relative", bottom: "3px" }}>+</div>
+                        </button>
+                    }
+                    show={showButtonTooltip}
+                    onHide={closeButtonTooltip}
+                    bottom="0"
+                    right="0"
+                    className='d-md-none'
+                    style={{ position: "fixed", bottom: "70px", right: "50px" }}
+                >
+                    <ActionButton icon='add-folder' onClick={() => setShowAddFolderModal(true)}>
+                        New folder
+                    </ActionButton>
+                    <ActionButton>
+
+                        <label style={{ cursor: 'pointer' }}>
+                            <Stack gap={2} direction='horizontal'>
+
+                                <MenuButton icon='add-file' className='menu-button' />
+                                File upload
+                            </Stack>
+
+                            <input
+                                type="file"
+                                onChange={handleUpload}
+                                onClick={clearFile}
+                                style={{ opacity: 0, position: 'absolute', left: '-9999px' }}
+                            />
+                        </label>
+                    </ActionButton>
+
+                </ButtonTooltip>
+
+
+
 
             </div>
+
             <RenameModal show={showModal} closeModal={() => setShowModal(false)} onSubmit={handleRename}
                 defaultValue={elements[activeIndex] && (elements[activeIndex].url ? activeFileName : elements[activeIndex].name)} inputRef={inputRef} />
             <Offcanvas show={showDetailsMobile} onHide={() => setShowDetailsMobile(false)} placement='end'>
@@ -242,6 +423,56 @@ export default function Dashboard() {
                     <DetailsMobile element={elements[activeIndex]} />
                 </Offcanvas.Body>
             </Offcanvas>
+
+            {/* Add folder Modal */}
+            <Modal show={showAddFolderModal} onHide={closeModal}>
+                <Form onSubmit={handleSubmit}>
+                    <Modal.Body>
+                        <Form.Group>
+                            <Form.Label>Folder Name</Form.Label>
+                            <Form.Control type='text' required value={name} onChange={(e) => setName(e.target.value)} autoFocus />
+                        </Form.Group>
+                        <Alert variant='danger' show={showError} onClose={() => setShowError(false)} dismissible className='mt-2'>
+                            <Alert.Heading>Folders in a folder should have unique names!</Alert.Heading>
+                        </Alert>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant='danger' onClick={closeModal}>Close</Button>
+                        <Button variant='success' type='submit'>Add Folder</Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
+
+            {/* show uploading files */}
+            {uploadingFiles.length > 0 &&
+                createPortal(
+                    <div
+                        style={{ position: 'absolute', bottom: '1rem', right: '1rem', maxWidth: '250px' }}>
+                        {uploadingFiles.map(file => (
+                            <Toast key={file.id} onClose={() => setUploadingFiles(prev => prev.filter(uploadFile => uploadFile.id !== file.id))}>
+                                <Toast.Header className='d-flex' closeButton={file.error}>
+                                    <div className='text-truncate w-100'>
+                                        {file.name}
+                                    </div>
+
+                                </Toast.Header>
+                                <Toast.Body>
+                                    <ProgressBar
+                                        animated={!file.error}
+                                        variant={file.error ? 'danger' : 'primary'}
+                                        now={file.error ? 100 : file.progress * 100}
+                                        label={file.error ? "Error" : `${Math.round(file.progress * 100)}%`}
+                                    />
+
+                                </Toast.Body>
+                            </Toast>
+                        ))}
+                    </div>,
+                    document.body
+                )}
+
+
+
         </div>
 
     )
@@ -252,3 +483,4 @@ export function MenuButton({ icon, className, style, onClick, ariaConrols, ariaE
     return <img src={`./images/${icon}.svg`} alt='menu-button' className={`${className}`} style={style} onClick={onClick} aria-controls={ariaConrols} aria-expanded={ariaExpanded} />
 
 }
+
