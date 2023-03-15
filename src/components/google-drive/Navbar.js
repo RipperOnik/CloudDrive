@@ -189,23 +189,31 @@ export default function NavbarComponent({ resetActiveIndex, style }) {
         )
 
     } else {
-        const mobileStyle = { width: '100%', maxWidth: 'none' }
+        const mobileStyle = { width: '100%', maxWidth: 'none', height: "73px" }
+        function onFocus() {
+            setShowTooltip(true)
+            document.body.style.backgroundImage = 'none'
+        }
+        function onHide() {
+            onHideSearchTooltip()
+            document.body.style.backgroundImage = 'linear-gradient(to right,#c910a9,#b311a1,#8e1191,#6a1282,#4e1276)'
+        }
 
-        return (<form className='form-search d-md-none' onSubmit={handleSearch} style={mobileStyle}>
+        return (<form className='form-search' onSubmit={handleSearch} style={mobileStyle}>
             <SearchTooltip
                 show={showToolTip}
                 width={target.current ? target.current.offsetWidth : 0}
+                tooltipStyle={{ top: "100%" }}
                 target={
-                    <input autoFocus style={{ borderRadius: 0 }} type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text}
-                        onClick={() => setShowTooltip(true)} onFocus={() => setShowTooltip(true)} onBlur={onHideSearchTooltip} onKeyDown={handleKeyDown} />
+                    <input autoFocus style={{ borderRadius: 0, height: "100%" }} type="search" width={width} ref={target} placeholder='Search in Drive' onChange={e => setText(e.target.value)} value={text}
+                        onFocus={onFocus} onBlur={onHide} onKeyDown={handleKeyDown} />
                 }>
                 {elements && elements.slice(0, 7).map((element, index) => {
                     return <SearchResult element={element} activeIndex={activeIndex} setActiveIndex={setActiveIndex} index={index} key={element.id} />
                 })}
             </SearchTooltip>
-            <button className='button-search' style={{ position: 'absolute', left: '10px', top: '6px' }} onClick={closeSearchBar}>
-                <FontAwesomeIcon icon={faArrowLeft} size="sm" style={{ color: "grey" }} />
-            </button>
+            <img src="./images/left-arrow.svg" alt="left-arrow" style={{ width: "32px", position: 'absolute', left: '10px', top: '30%' }} className='button-circular' onClick={closeSearchBar} />
+
         </form>)
     }
 

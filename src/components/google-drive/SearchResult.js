@@ -20,7 +20,7 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
 
     if (isFile) {
         return <a
-            className='d-flex w-100 align-items-center search-result text-truncate'
+            className='d-flex w-100 align-items-center search-result text-truncate py-2'
             target="_blank"
             href={element.url}
             style={{ backgroundColor: active ? 'rgba(0, 0, 0, 0.12)' : '', paddingRight: "20px" }}
@@ -41,7 +41,7 @@ export default function SearchResult({ activeIndex, element, setActiveIndex, ind
         </a>
     } else {
         return <Link
-            className='d-flex w-100 align-items-center search-result'
+            className='d-flex w-100 align-items-center search-result py-2'
             to={`/folder/${element.id}`}
             style={{ backgroundColor: active ? 'rgba(0, 0, 0, 0.12)' : '', paddingRight: "20px" }}
             onMouseEnter={handleMouseEnter}

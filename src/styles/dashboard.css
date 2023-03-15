@@ -30,7 +30,8 @@ body,
   height: 100%;
   overflow: hidden;
 }
-#root {
+
+body {
   background-image: var(--background--gradient);
 }
 

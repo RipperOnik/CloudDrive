@@ -382,7 +382,7 @@ export default function Dashboard() {
                     bottom="0"
                     right="0"
                     className='d-md-none'
-                    style={{ position: "fixed", bottom: "70px", right: "50px", zIndex: "5" }}
+                    style={{ position: "fixed", bottom: "70px", right: "8%", zIndex: "5" }}
                 >
                     <ActionButton icon='add-folder' onClick={() => setShowAddFolderModal(true)}>
                         New folder
