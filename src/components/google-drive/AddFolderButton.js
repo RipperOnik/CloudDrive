@@ -72,10 +72,6 @@ export default function AddFolderButton({ currentFolder, folders, style }) {
                     </Modal.Footer>
 
                 </Form>
-
-
-
-
             </Modal>
 
 

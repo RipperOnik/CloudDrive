@@ -119,7 +119,6 @@ export default function Dashboard() {
                 database.folders.update(element.id, { name: inputRef.current.value }, currentUser)
             }
         }
-
     }
     function handleRemove() {
         if (elements[activeIndex].url) {
@@ -383,7 +382,7 @@ export default function Dashboard() {
                     bottom="0"
                     right="0"
                     className='d-md-none'
-                    style={{ position: "fixed", bottom: "70px", right: "50px" }}
+                    style={{ position: "fixed", bottom: "70px", right: "50px", zIndex: "5" }}
                 >
                     <ActionButton icon='add-folder' onClick={() => setShowAddFolderModal(true)}>
                         New folder

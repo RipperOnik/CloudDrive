@@ -23,6 +23,7 @@ const convertToType = {
 export default function AddFileButton({ currentFolder, style }) {
 
     const { currentUser } = useAuth()
+
     const [uploadingFiles, setUploadingFiles] = useState([])
     function handleUpload(e) {
         const file = e.target.files[0]

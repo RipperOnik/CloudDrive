@@ -50,10 +50,13 @@ body,
 }
 
 .add-button--floating {
-  background-color: rgba(197, 17, 168, 0.8);
+  background-color: rgba(197, 17, 168);
   border-radius: 50%;
   width: 60px;
   padding: 0;
   height: 60px;
   color: white;
+}
+.add-button--floating:hover {
+  background-color: rgba(197, 17, 168);
 }
