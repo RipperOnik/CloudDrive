@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/CloudDrive/static/css/main.5e1036d8.css",
-    "main.js": "/CloudDrive/static/js/main.d88b031e.js",
-    "index.html": "/CloudDrive/index.html",
-    "main.5e1036d8.css.map": "/CloudDrive/static/css/main.5e1036d8.css.map",
-    "main.d88b031e.js.map": "/CloudDrive/static/js/main.d88b031e.js.map"
+    "main.css": "/Drive/static/css/main.5e1036d8.css",
+    "main.js": "/Drive/static/js/main.36db357d.js",
+    "index.html": "/Drive/index.html",
+    "main.5e1036d8.css.map": "/Drive/static/css/main.5e1036d8.css.map",
+    "main.36db357d.js.map": "/Drive/static/js/main.36db357d.js.map"
   },
   "entrypoints": [
     "static/css/main.5e1036d8.css",
-    "static/js/main.d88b031e.js"
+    "static/js/main.36db357d.js"
   ]
 }
